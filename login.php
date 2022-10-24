@@ -1,12 +1,6 @@
 <?php
 include_once('config.php');
 
-
-echo "<pre>";
-print_r ($_SERVER['REQUEST_URI']);
-echo "</pre>";
-exit();
-
 // proses login
 if (isset($_POST['username'])) {
     $username = $_POST['username'];

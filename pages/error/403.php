@@ -10,11 +10,11 @@
 
 <section class="content">
     <div class="error-page">
-        <h2 class="headline text-warning">404</h2>
+        <h2 class="headline text-warning">403</h2>
         <div class="error-content">
-            <h3><span class="fas fa-exclamation-triangle text-warning"></span> Oops! Halaman tidak ditemukan.</h3>
+            <h3><span class="fas fa-exclamation-triangle text-warning"></span> Oops! Hak akses terbatas.</h3>
 
-            <p>Halaman yang Anda cari tidak ditemukan. Klik <a href="index.php">disini</a> untuk kembali ke halaman beranda.</p>
+            <p>Anda tidak dapat mengakses halaman tersebut.<br />Klik <a href="index.php">disini</a> untuk kembali ke halaman beranda.</p>
         </div>
     </div>
 </section>

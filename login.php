@@ -1,24 +1,55 @@
 <?php
-include_once('./config.php');
+include_once('config.php');
 
+
+echo "<pre>";
+print_r ($_SERVER['REQUEST_URI']);
+echo "</pre>";
+exit();
+
+// proses login
 if (isset($_POST['username'])) {
-    $_SESSION['session_id'] = session_id();
-    $_SESSION['is_login'] = true;
-    $_SESSION['id'] = $_POST['username'];
-    $_SESSION['username'] = $_POST['username'];
-    $_SESSION['nama'] = $_POST['username'];
-    $_SESSION['email'] = $_POST['username'];
-    $_SESSION['level'] = $_POST['username'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    header('location:index.php');
-    exit();
+    $stmt = $conn->prepare("SELECT * FROM pengguna p LEFT JOIN warga w ON w.nik = p.nik WHERE p.username = :username LIMIT 1");
+    $stmt->execute(['username' => $username]);
+
+    // cek apakah ada user dengan username tersebut
+    if ($stmt->rowCount()) {
+        $pengguna = $stmt->fetchObject();
+        // verifikasi password
+        if (password_verify($password, $pengguna->password)) {
+            // buat session
+            $_SESSION['session_id'] = session_id();
+            $_SESSION['is_login'] = true;
+            $_SESSION['id'] = $pengguna->id_pengguna;
+            $_SESSION['username'] = $pengguna->username;
+            $_SESSION['nama'] = $pengguna->nama;
+            $_SESSION['email'] = $pengguna->email;
+            $_SESSION['level'] = $pengguna->id_level;
+
+            header('Location:index.php');
+            exit();
+        } else {
+            // password tidak cocok
+            $alert->error('Password tidak cocok. Silahkan ulangi kembali!');
+        }
+    } else {
+        // data pengguna tidak ditemukan dengan username tersebut
+        $alert->error('Username tidak ditemukan. Silahkan ulangi kembali!');
+    }
 }
 
+// proses logout
 if (isset($_GET['event']) && $_GET['event'] == 90) {
     session_unset();
     session_destroy();
     session_write_close();
     session_regenerate_id(true);
+
+    header('Location:login.php');
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -43,9 +74,11 @@ if (isset($_GET['event']) && $_GET['event'] == 90) {
 
                 <p class="login-box-msg">Silahkan login untuk masuk ke sistem</p>
 
-                <form action="./login.php" method="post">
+                <?= $alert->display() ?>
+
+                <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post" autocomplete="off">
                     <div class="input-group mb-3">
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Alamat Email atau Username">
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Alamat Email atau Username" autofocus autocomplete="username">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>

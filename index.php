@@ -5,7 +5,7 @@ require_once('./function/akses.php');
 // cek apakah sudah login
 if (!$_SESSION['is_login']) {
     // kembali ke halaman login
-    header('location:/auth/login');
+    header('location:login.php');
     exit();
 }
 

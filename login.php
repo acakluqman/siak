@@ -52,10 +52,11 @@ if (isset($_GET['event']) && $_GET['event'] == 90) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Silahkan Login &bullet; RT02/RW03</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="./dist/css/adminlte.min.css">
+    <link rel="shortcut icon" href="./dist/img/pemkot.png" type="image/x-icon">
 </head>
 
 <body class="hold-transition login-page">
@@ -70,7 +71,7 @@ if (isset($_GET['event']) && $_GET['event'] == 90) {
 
                 <?= $alert->display() ?>
 
-                <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post" autocomplete="off">
+                <form action="login.php" method="post" autocomplete="off">
                     <div class="input-group mb-3">
                         <input type="text" name="username" id="username" class="form-control" placeholder="Alamat Email atau Username" autofocus autocomplete="username">
                         <div class="input-group-append">
@@ -92,10 +93,7 @@ if (isset($_GET['event']) && $_GET['event'] == 90) {
                 </form>
 
                 <p class="mb-1">
-                    <a href="">Lupa password</a>
-                </p>
-                <p class="mb-0">
-                    <a href="" class="text-center">Register a new membership</a>
+                    Kembali ke <a href="index.php">halaman depan</a>
                 </p>
             </div>
         </div>

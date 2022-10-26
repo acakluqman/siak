@@ -34,6 +34,7 @@ $_SESSION['last_activity'] = $time;
     <link rel="stylesheet" href="<?= $base_url . 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' ?>">
+    <link rel="stylesheet" href="<?= $base_url . 'plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/jqvmap/jqvmap.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'dist/css/adminlte.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' ?>">
@@ -154,7 +155,7 @@ $_SESSION['last_activity'] = $time;
         </div>
 
         <footer class="main-footer">
-            <strong>Copyright &copy; 2022 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+            <strong>&copy; 2022 <a href="#">AdminLTE.io</a>.</strong> All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <strong>Version</strong> 1.0
             </div>
@@ -180,6 +181,8 @@ $_SESSION['last_activity'] = $time;
     <script src="<?= $base_url . 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/datatables-responsive/js/dataTables.responsive.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.id.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/moment/moment.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/daterangepicker/daterangepicker.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' ?>"></script>
@@ -195,6 +198,12 @@ $_SESSION['last_activity'] = $time;
         $(function() {
             $('.table').DataTable();
             $('.select2').select2();
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+                weekStart: 0,
+                endDate: '+0d',
+                language: "id"
+            });
         })
     </script>
 </body>

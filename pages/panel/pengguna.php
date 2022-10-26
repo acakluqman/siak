@@ -151,7 +151,7 @@ if (isset($_POST['username'])) {
                         </div>
                         <div class="form-group">
                             <label for="email">Alamat Email</label>
-                            <input type="email" name="email" id="email" class="form-control" value="" placeholder="Alamat Email" required="required">
+                            <input type="email" name="email" id="email" class="form-control" value="" placeholder="Alamat Email" required="required" inputmode="email">
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>

@@ -37,7 +37,11 @@ require_once('./config.php');
                             <a href="index.php?page=cek-permohonan" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'cek-permohonan' ? 'active' : '' ?>">Cek Permohonan</a>
                         </li>
                         <li class="nav-item">
-                            <a href="login.php" class="nav-link">Login</a>
+                            <?php if (isset($_SESSION['is_login'])) : ?>
+                                <a href="app.php?page=dashboard" class="nav-link">Masuk ke Aplikasi</a>
+                            <?php else : ?>
+                                <a href="login.php" class="nav-link">Login</a>
+                            <?php endif ?>
                         </li>
                     </ul>
                 </div>

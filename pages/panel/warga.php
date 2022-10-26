@@ -24,9 +24,11 @@ $warga->execute();
 
 <section class="content">
     <div class="card">
-        <div class="card-header">
-            <a href="app.php?page=tambah_warga" class="btn btn-primary"><span class="fa fa-user-plus"></span> Tambah</a>
-        </div>
+        <?php if ($_SESSION['level'] == 4) : ?>
+            <div class="card-header">
+                <a href="app.php?page=tambah_warga" class="btn btn-primary"><span class="fa fa-user-plus"></span> Tambah</a>
+            </div>
+        <?php endif ?>
         <div class="card-body table-responsive">
             <table class="table table-striped table-hover w-100" aria-describedby="warga" id="warga">
                 <thead>

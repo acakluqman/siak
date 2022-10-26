@@ -138,7 +138,7 @@ if (isset($_POST['kartu_keluarga'])) {
 
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Tempat, Tanggal Lahir</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 mb-2">
                         <input type="text" class="form-control" name="tmp_lahir" id="tgl_lahir" placeholder="Tempat Lahir" required>
                     </div>
                     <div class="col-sm-6">

@@ -1,6 +1,7 @@
 <?php
 require_once('./config.php');
 require_once('./function/akses.php');
+require_once('./function/input.php');
 
 // cek apakah sudah login
 if (!$_SESSION['is_login']) {
@@ -29,12 +30,16 @@ $_SESSION['last_activity'] = $time;
     <link rel="stylesheet" href="<?= $base_url . 'plugins/fontawesome-free/css/all.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' ?>">
+    <link rel="stylesheet" href="<?= $base_url . 'plugins/select2/css/select2.min.css' ?>">
+    <link rel="stylesheet" href="<?= $base_url . 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' ?>">
+    <link rel="stylesheet" href="<?= $base_url . 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' ?>">
+    <link rel="stylesheet" href="<?= $base_url . 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/jqvmap/jqvmap.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'dist/css/adminlte.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/daterangepicker/daterangepicker.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/summernote/summernote-bs4.min.css' ?>">
-    <link rel="shortcut icon" href="./dist/img/pemkot.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= $base_url . 'dist/img/pemkot.png' ?>" type="image/x-icon">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -50,7 +55,7 @@ $_SESSION['last_activity'] = $time;
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary">
-            <a href="index.php?page=dashboard" class="brand-link">
+            <a href="app.php?page=dashboard" class="brand-link">
                 <img src="<?= $base_url . 'dist/img/pemkot.png' ?>" alt="Logo" class="brand-image" style="opacity: .8">
                 <span class="brand-text font-weight-light">SI KEPENDUDUKAN</span>
             </a>
@@ -59,31 +64,33 @@ $_SESSION['last_activity'] = $time;
                 <nav class="mt-2" aria-label="nav-sidebar">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="index.php?page=dashboard" class="nav-link <?= !isset($_GET['page']) || $_GET['page'] == 'dashboard' ? 'active' : '' ?>">
+                            <a href="app.php?page=dashboard" class="nav-link <?= !isset($_GET['page']) || $_GET['page'] == 'dashboard' ? 'active' : '' ?>">
                                 <span class="nav-icon fas fa-tachometer-alt"></span>
                                 <p>BERANDA</p>
                             </a>
                         </li>
 
+                        <!-- login sebagai operator, ketua rt dan ketua rw -->
                         <?php if (in_array($_SESSION['level'], [2, 3, 4])) : ?>
                             <li class="nav-item">
-                                <a href="index.php?page=warga" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'warga' ? 'active' : '' ?>">
+                                <a href="app.php?page=warga" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['warga', 'edit_warga', 'detail_warga', 'tambah_warga']) ? 'active' : '' ?>">
                                     <span class="nav-icon fas fa-users"></span>
                                     <p>DATA WARGA</p>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="index.php?page=pengajuan" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'pengajuan' ? 'active' : '' ?>">
+                                <a href="app.php?page=pengajuan" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['pengajuan', 'detail_pengajuan', 'validasi_pengajuan']) ? 'active' : '' ?>">
                                     <span class="nav-icon fa fa-file-alt"></span>
                                     <p>PENGAJUAN SURAT</p>
                                 </a>
                             </li>
                         <?php endif ?>
 
+                        <!-- login sebagai admin -->
                         <?php if ($_SESSION['level'] == 1) : ?>
                             <li class="nav-item">
-                                <a href="index.php?page=pengguna" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'pengguna' ? 'active' : '' ?>">
+                                <a href="app.php?page=pengguna" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'pengguna' ? 'active' : '' ?>">
                                     <span class="nav-icon fas fa-user"></span>
                                     <p>DATA PENGGUNA</p>
                                 </a>
@@ -135,13 +142,13 @@ $_SESSION['last_activity'] = $time;
             <?php
             // load file sesuai request
             if (isset($_GET['page'])) {
-                if (file_exists('pages/' . $_GET['page'] . '.php')) {
-                    include_once('pages/' . $_GET['page'] . '.php');
+                if (file_exists('pages/panel/' . $_GET['page'] . '.php')) {
+                    include_once('pages/panel/' . $_GET['page'] . '.php');
                 } else {
                     include_once('pages/error/404.php');
                 }
             } else {
-                include_once('pages/dashboard.php');
+                include_once('pages/panel/dashboard.php');
             }
             ?>
         </div>
@@ -160,11 +167,19 @@ $_SESSION['last_activity'] = $time;
         $.widget.bridge('uibutton', $.ui.button)
     </script>
     <script src="<?= $base_url . 'plugins/bootstrap/js/bootstrap.bundle.min.js' ?>"></script>
-    <script src="<?= $base_url . 'plugins/chart.js/Chart.min.js' ?>"></script>
-    <script src="<?= $base_url . 'plugins/sparklines/sparkline.js' ?>"></script>
-    <script src="<?= $base_url . 'plugins/jqvmap/jquery.vmap.min.js' ?>"></script>
-    <script src="<?= $base_url . 'plugins/jqvmap/maps/jquery.vmap.usa.js' ?>"></script>
-    <script src="<?= $base_url . 'plugins/jquery-knob/jquery.knob.min.js' ?>"></script>
+    <?php if (!isset($_GET['page']) || $_GET['page'] == 'dashboard') : ?>
+        <script src="<?= $base_url . 'plugins/chart.js/Chart.min.js' ?>"></script>
+        <script src="<?= $base_url . 'plugins/sparklines/sparkline.js' ?>"></script>
+        <script src="<?= $base_url . 'plugins/jqvmap/jquery.vmap.min.js' ?>"></script>
+        <script src="<?= $base_url . 'plugins/jqvmap/maps/jquery.vmap.usa.js' ?>"></script>
+        <script src="<?= $base_url . 'plugins/jquery-knob/jquery.knob.min.js' ?>"></script>
+        <script src="<?= $base_url . 'dist/js/pages/dashboard.js' ?>"></script>
+    <?php endif ?>
+    <script src="<?= $base_url . 'plugins/select2/js/select2.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/datatables/jquery.dataTables.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/datatables-responsive/js/dataTables.responsive.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/moment/moment.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/daterangepicker/daterangepicker.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' ?>"></script>
@@ -172,12 +187,15 @@ $_SESSION['last_activity'] = $time;
     <script src="<?= $base_url . 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' ?>"></script>
     <script src="<?= $base_url . 'dist/js/adminlte.js' ?>"></script>
     <script src="<?= $base_url . 'dist/js/demo.js' ?>"></script>
-    <script src="<?= $base_url . 'dist/js/pages/dashboard.js' ?>"></script>
     <script>
         $('#logout').click(function() {
             location.href = 'login.php?event=90';
             return false;
         });
+        $(function() {
+            $('.table').DataTable();
+            $('.select2').select2();
+        })
     </script>
 </body>
 

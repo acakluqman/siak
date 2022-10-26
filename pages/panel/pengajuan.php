@@ -1,6 +1,10 @@
 <?php
 // validasi hak akses
 aksesOnly([2, 3, 4]);
+
+// data pengajuan
+$permohonan = $conn->prepare("SELECT p.*, w.nama FROM rwt_pengajuan p LEFT JOIN warga w ON w.nik = p.nik ORDER BY p.tgl_ajuan DESC");
+$permohonan->execute();
 ?>
 <section class="content-header">
     <div class="container-fluid">
@@ -10,7 +14,7 @@ aksesOnly([2, 3, 4]);
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
+                    <li class="breadcrumb-item"><a href="app.php">Beranda</a></li>
                     <li class="breadcrumb-item active">Data Pengajuan Surat</li>
                 </ol>
             </div>
@@ -34,20 +38,19 @@ aksesOnly([2, 3, 4]);
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-center">.</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    <?php foreach ($permohonan->fetchAll() as $key => $row) : ?>
+                        <tr>
+                            <td class="text-center"><?= ($key + 1) ?>.</td>
+                            <td><?= $row['nik'] ?></td>
+                            <td><?= $row['nama'] ?></td>
+                            <td><?= $row['keperluan'] ?></td>
+                            <td><?= $row['tgl_ajuan'] ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <?php endforeach ?>
                 </tbody>
             </table>
-        </div>
-        <div class="card-footer">
-            Footer
         </div>
     </div>
 </section>

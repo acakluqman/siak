@@ -23,7 +23,7 @@ if (isset($_POST['username'])) {
             $_SESSION['email'] = $pengguna->email;
             $_SESSION['level'] = $pengguna->id_level;
 
-            header('Location:index.php');
+            header('Location:app.php');
             exit();
         } else {
             // password tidak cocok

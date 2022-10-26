@@ -19,7 +19,7 @@ require_once('./config.php');
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div class="container">
-                <a href="/" class="navbar-brand">
+                <a href="index.php" class="navbar-brand">
                     <img src="./dist/img/pemkot.png" alt="Logo" class="brand-image">
                     <span class="brand-text font-weight-light">RT02/RW03</span>
                 </a>

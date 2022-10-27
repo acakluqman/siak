@@ -18,7 +18,7 @@
                                 <table class="w-100">
                                     <tr>
                                         <td>NIK</td>
-                                        <td style="width: 80%;">: 32786498534867456</td>
+                                        <td style="width: 60%;">: 32786498534867456</td>
                                     </tr>
                                     <tr>
                                         <td>Nama Lengkap</td>
@@ -56,7 +56,7 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><button class="btn btn-danger mt-4"><i class="fa fa-file-pdf mr-3" aria-hidden="true"></i>Unduh Surat</button></td>
+                                        <td><a href="<?= $base_url . 'cetak.php' ?>" target="_blank" class="btn btn-danger mt-4"><i class="fa fa-file-pdf mr-3" aria-hidden="true"></i>Unduh Surat</a></td>
                                     </tr>
                                 </table>
                             </div>

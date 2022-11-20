@@ -1,5 +1,6 @@
 <?php
 require_once('./config.php');
+require_once('./function/input.php');
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -38,7 +39,7 @@ require_once('./config.php');
                             <a href="index.php" class="nav-link <?= !isset($_GET['page']) || $_GET['page'] == 'layanan' ? 'active' : '' ?>">Layanan</a>
                         </li>
                         <li class="nav-item">
-                            <a href="index.php?page=cek-permohonan" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'cek-permohonan' ? 'active' : '' ?>">Cek Permohonan</a>
+                            <a href="index.php?page=status_permohonan" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'status_permohonan' ? 'active' : '' ?>">Cek Permohonan</a>
                         </li>
                         <li class="nav-item">
                             <?php if (isset($_SESSION['is_login'])) : ?>

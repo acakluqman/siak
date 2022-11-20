@@ -30,7 +30,7 @@ switch ($_POST['action']) {
         $stmt = $conn->prepare("INSERT INTO rwt_pengajuan (nik, tujuan, keperluan, keterangan) VALUES (:nik, :tujuan, :keperluan, :keterangan)");
         $stmt->execute(['nik' => $nik, 'tujuan' => $tujuan, 'keperluan' => $keperluan, 'keterangan' => $keterangan]);
 
-        echo json_encode(['status' => $stmt ? 200 : 201, 'message' => $stmt ? sprintf("%04d", $conn->lastInsertId())  : $conn->errorInfo()]);
+        echo json_encode(['status' => $stmt ? 200 : 201, 'message' => $stmt ? date('ym') . sprintf("%03d", $conn->lastInsertId())  : $conn->errorInfo()]);
         break;
 
     default:

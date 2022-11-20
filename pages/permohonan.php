@@ -71,6 +71,9 @@
                                         <textarea class="form-control" name="keterangan" id="keterangan" rows="2" placeholder="Masukkan Keterangan" required></textarea>
                                         <span id="keterangan_error" class="error invalid-feedback"></span>
                                     </div>
+
+                                    <span class="text-danger" id="pengajuan_error"></span>
+
                                     <button class="btn btn-danger" onclick="stepper.previous()"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>Kembali</button>
                                     <button type="submit" id="btn_ajukan" onclick="btnAjukan()" class="btn btn-primary"><i class="fa fa-check mr-2" aria-hidden="true"></i>Ajukan Sekarang</button>
                                 </div>
@@ -209,13 +212,13 @@
                     keterangan: $('#keterangan').val()
                 },
                 success: function(response) {
+                    console.log(response);
                     const res = JSON.parse(response);
-                    console.log(res.status)
                     if (res.status == 200) {
                         stepper.next();
                         $('#kode_pengajuan').html(res.message)
                     } else {
-
+                        $('#pengajuan_error').html('ERROR: ' + res.message)
                     }
                 }
             });

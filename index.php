@@ -7,12 +7,16 @@ require_once('./config.php');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Selamat Datang &bullet; RT02/RW03</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/fontawesome-free/css/all.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/bs-stepper/css/bs-stepper.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'dist/css/adminlte.min.css' ?>">
+    <link rel="stylesheet" href="<?= $base_url . 'plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' ?>">
     <link rel="shortcut icon" href="./dist/img/pemkot.png" type="image/x-icon">
+    <script src="<?= $base_url . 'plugins/jquery/jquery.min.js' ?>"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
 <body class="hold-transition layout-top-nav">
@@ -71,10 +75,10 @@ require_once('./config.php');
         </footer>
     </div>
 
-    <script src="<?= $base_url . 'plugins/jquery/jquery.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/bootstrap/js/bootstrap.bundle.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/bs-stepper/js/bs-stepper.min.js' ?>"></script>
     <script src="<?= $base_url . 'dist/js/adminlte.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' ?>"></script>
     <script src="<?= $base_url . 'dist/js/demo.js' ?>"></script>
     <?php if (isset($_GET['page']) && $_GET['page'] == 'permohonan') : ?>
         <script>
@@ -83,6 +87,25 @@ require_once('./config.php');
             })
         </script>
     <?php endif; ?>
+    <script>
+        $(function() {
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+                weekStart: 0,
+                endDate: '+0d',
+                language: "id"
+            });
+        })
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
 </body>
 
 </html>

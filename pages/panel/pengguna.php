@@ -10,8 +10,8 @@ $warga = $stmt->fetchAll();
 // proses tambah pengguna
 if (isset($_POST['username'])) {
     $nik = secureInput($_POST['nik']);
-    $username = secureInput($_POST['username']);
-    $email = secureInput($_POST['email']);
+    $username = secureInput(strtolower($_POST['username']));
+    $email = secureInput(strtolower($_POST['email']));
     $password = secureInput($_POST['password']);
     $konfirmasi = secureInput($_POST['konfirmasi']);
     $level = secureInput($_POST['level']);
@@ -55,12 +55,21 @@ if (isset($_POST['username'])) {
                         'tgl_registrasi' => date('Y-m-d H:i:s')
                     ]);
 
-                    if ($insert) $alert->success('Berhasil menambahkan data pengguna!', 'app.php?page=pengguna', true);
-                    else $alert->error('Gagal menambahkan data pengguna. Silahkan ulangi kembali!', 'app.php?page=pengguna', true);
+                    if ($insert) $alert->success('Berhasil menambahkan data pengguna!');
+                    else $alert->error('Gagal menambahkan data pengguna. Silahkan ulangi kembali!');
                 }
             }
         }
     }
+}
+// proses hapus pengguna
+if (isset($_POST['delete'])) {
+    $id = $_POST['id'];
+    $delete = $conn->prepare("DELETE FROM pengguna WHERE md5(id_pengguna) = :id");
+    $delete->execute(['id' => $id]);
+    
+    if ($delete) $alert->success('Berhasil menghapus data pengguna!');
+    else $alert->error('Gagal menghapus data pengguna. Silahkan ulangi kembali!');
 }
 ?>
 <section class="content-header">
@@ -108,7 +117,7 @@ if (isset($_POST['username'])) {
                     $no = 1;
                     foreach ($stmt->fetchAll() as $row) :
                     ?>
-                        <tr>
+                        <tr data-id="<?= md5($row['id_pengguna']) ?>">
                             <td class="text-center"><?= $no++ ?>.</td>
                             <td><?= $row['nama'] ?></td>
                             <td><?= $row['username'] ?></td>
@@ -116,8 +125,8 @@ if (isset($_POST['username'])) {
                             <td><?= $row['level'] ?></td>
                             <td><?= date_format(date_create($row['tgl_registrasi']), 'd M Y H:i A') ?></td>
                             <td class="text-center">
-                                <a href="" title="Edit" class="btn btn-sm btn-success"><span class="fas fa-user-edit"></span> Edit</a>
-                                <a href="" title="Hapus" class="btn btn-sm btn-danger"><span class="fa fa-trash-alt"></span> Hapus</a>
+                                <a href="app.php?page=edit_pengguna&id=<?= md5($row['id_pengguna']) ?>" title="Edit" class="btn btn-sm btn-success"><span class="fas fa-user-edit"></span> Edit</a>
+                                <button type="button" title="Hapus" class="btn btn-sm btn-danger delete"><span class="fa fa-trash-alt"></span> Hapus</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -179,4 +188,37 @@ if (isset($_POST['username'])) {
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-delete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Pengguna?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="app.php?page=pengguna" class="form" method="post">
+                    <input type="hidden" name="id" id="id" value="" readonly>
+                    <div class="modal-body">
+                        <p>Apakah Anda yakin akan menghapus data pengguna tersebut?</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                        <button type="submit" name="delete" class="btn btn-danger">Hapus</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script>
+    $('button.delete').on('click', function(e) {
+        e.preventDefault();
+        var id = $(this).closest('tr').data('id');
+        $('#modal-delete').data('id', id).modal('show');
+        $('#modal-delete #id').val(id);
+        console.log(id)
+    });
+</script>

@@ -14,7 +14,7 @@
         <div class="error-content">
             <h3><span class="fas fa-exclamation-triangle text-warning"></span> Oops! Hak akses terbatas.</h3>
 
-            <p>Anda tidak dapat mengakses halaman tersebut.<br />Klik <a href="index.php">disini</a> untuk kembali ke halaman beranda.</p>
+            <p>Anda tidak dapat mengakses halaman tersebut.<br />Klik <a href="app.php">disini</a> untuk kembali ke halaman depan.</p>
         </div>
     </div>
 </section>

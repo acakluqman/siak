@@ -14,7 +14,7 @@
         <div class="error-content">
             <h3><span class="fas fa-exclamation-triangle text-warning"></span> Oops! Halaman tidak ditemukan.</h3>
 
-            <p>Halaman yang Anda cari tidak ditemukan. Klik <a href="index.php">disini</a> untuk kembali ke halaman beranda.</p>
+            <p>Halaman yang Anda cari tidak ditemukan. Klik <a href="index.php">disini</a> untuk kembali ke halaman depan.</p>
         </div>
     </div>
 </section>

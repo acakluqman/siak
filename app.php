@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once('./config.php');
 require_once('./function/akses.php');
 require_once('./function/input.php');
@@ -24,6 +25,7 @@ $_SESSION['last_activity'] = $time;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Panel &bullet; RT02/RW03</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -36,6 +38,11 @@ $_SESSION['last_activity'] = $time;
     <link rel="stylesheet" href="<?= $base_url . 'dist/css/adminlte.min.css' ?>">
     <link rel="stylesheet" href="<?= $base_url . 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' ?>">
     <link rel="shortcut icon" href="<?= $base_url . 'dist/img/pemkot.png' ?>" type="image/x-icon">
+    <script src="<?= $base_url . 'plugins/jquery/jquery.min.js' ?>"></script>
+    <?php if (!isset($_GET['page']) || $_GET['page'] == 'dashboard') { ?>
+        <link rel="stylesheet" href="<?= $base_url . 'plugins/chart.js/Chart.min.css' ?>">
+        <script src="<?= $base_url . 'plugins/chart.js/Chart.min.js' ?>"></script>
+    <?php } ?>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -75,6 +82,36 @@ $_SESSION['last_activity'] = $time;
                                 </a>
                             </li>
 
+                            <li class="nav-item <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi']) ? 'menu-open' : '' ?>">
+                                <a href="#" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi']) ? 'active' : '' ?>">
+                                    <i class="nav-icon fas fa-chart-line"></i>
+                                    <p>
+                                        LAPORAN
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="app.php?page=lap_kematian" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'lap_kematian' ? 'active' : '' ?>">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Kematian</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="app.php?page=lap_kelahiran" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'lap_kelahiran' ? 'active' : '' ?>">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Kelahiran</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="app.php?page=lap_mutasi" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'lap_mutasi' ? 'active' : '' ?>">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Mutasi</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="nav-item">
                                 <a href="app.php?page=pengajuan" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['pengajuan', 'detail_pengajuan', 'validasi_pengajuan']) ? 'active' : '' ?>">
                                     <span class="nav-icon fa fa-file-alt"></span>
@@ -86,7 +123,7 @@ $_SESSION['last_activity'] = $time;
                         <!-- login sebagai admin -->
                         <?php if ($_SESSION['level'] == 1) : ?>
                             <li class="nav-item">
-                                <a href="app.php?page=pengguna" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'pengguna' ? 'active' : '' ?>">
+                                <a href="app.php?page=pengguna" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['pengguna', 'edit_pengguna'])  ? 'active' : '' ?>">
                                     <span class="nav-icon fas fa-user"></span>
                                     <p>DATA PENGGUNA</p>
                                 </a>
@@ -157,7 +194,6 @@ $_SESSION['last_activity'] = $time;
         </footer>
     </div>
 
-    <script src="<?= $base_url . 'plugins/jquery/jquery.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/jquery-ui/jquery-ui.min.js' ?>"></script>
     <script>
         $.widget.bridge('uibutton', $.ui.button)

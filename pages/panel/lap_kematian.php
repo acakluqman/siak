@@ -3,23 +3,41 @@
 aksesOnly([2, 3, 4]);
 
 // ambil data riwayat kematian
-$query = $conn->prepare('SELECT w.nik, w.nama, rk.tgl_meninggal, rk.tgl_lapor FROM rwt_kematian rk LEFT JOIN warga w ON w.nik = rk.nik ORDER BY rk.tgl_meninggal ASC');
+$query = $conn->prepare('SELECT rk.id_rwt_kematian, w.nik, w.nama, rk.tgl_meninggal, rk.tgl_lapor
+    FROM rwt_kematian rk
+    LEFT JOIN warga w ON w.nik = rk.nik
+    ORDER BY rk.tgl_meninggal ASC');
 $query->execute();
 $data = $query->fetchAll();
 
 // ambil data warga kecuali data warga yang sudah ada di table rwt_kematian
-$stmt = $conn->prepare("SELECT w.nik, w.nama FROM warga w WHERE NOT EXISTS (SELECT rk.nik FROM rwt_kematian rk WHERE rk.nik = w.nik) ORDER BY w.nama ASC");
+$stmt = $conn->prepare("SELECT w.nik, w.nama
+    FROM warga w
+    WHERE NOT EXISTS (
+        SELECT rk.nik FROM rwt_kematian rk WHERE rk.nik = w.nik
+        ) ORDER BY w.nama ASC");
 $stmt->execute();
 $warga = $stmt->fetchAll();
 
+// proses simpan data kematian
 if (isset($_POST['submit'])) {
     $nik = $_POST['nik'];
     $tgl_meninggal = date_format(date_create($_POST['tgl_meninggal']), 'Y-m-d');
     $insert = $conn->prepare("INSERT INTO rwt_kematian (nik, tgl_meninggal) VALUES (:nik, :tgl_meninggal)");
     $insert->execute(['nik' => $nik, 'tgl_meninggal' => $tgl_meninggal]);
 
-    if ($insert) $alert->success('Berhasil menambahkan data kematian!');
-    else $alert->error('Gagal menambahkan data kematian. Silahkan ulangi kembali!');
+    if ($insert) $alert->success('Berhasil menambahkan data kematian!', 'app.php?page=lap_kematian', true);
+    else $alert->error('Gagal menambahkan data kematian. Silahkan ulangi kembali!', 'app.php?page=lap_', true);
+}
+
+// proses hapus data kematian
+if (isset($_POST['delete'])) {
+    $id = $_POST['id'];
+    $delete = $conn->prepare("DELETE FROM rwt_kematian WHERE md5(id_rwt_kematian) = :id");
+    $delete->execute(['id' => $id]);
+
+    if ($delete) $alert->success('Berhasil menghapus data riwayat kematian!', 'app.php?page=lap_kematian', true);
+    else $alert->error('Gagal menghapus data riwayat kematian. Silahkan ulangi kembali!', 'app.php?page=lap_kematian', true);
 }
 ?>
 <section class="content-header">
@@ -56,7 +74,7 @@ if (isset($_POST['submit'])) {
                         <th>Nama Warga</th>
                         <th>Tanggal Meninggal</th>
                         <th>Tanggal Laporan</th>
-                        <th></th>
+                        <th class="w-5"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,16 +82,15 @@ if (isset($_POST['submit'])) {
                     $no = 1;
                     foreach ($data as $row) {
                     ?>
-                        <tr>
+                        <tr data-id="<?= md5($row['id_rwt_kematian']) ?>">
                             <td class="text-center"><?= $no++ ?>.</td>
                             <td><?= $row['nik'] ?></td>
                             <td><?= $row['nama'] ?></td>
                             <td><?= date_format(date_create($row['tgl_meninggal']), 'd M Y') ?></td>
                             <td><?= date_format(date_create($row['tgl_lapor']), 'd M Y H:i A') ?></td>
                             <td class="text-center">
-                                <button type="button" title="Edit" class="btn btn-sm btn-success"><span class="fas fa-pencil-alt"></span> Edit</button>
                                 <button type="button" title="Hapus" class="btn btn-sm btn-danger delete"><span class="fa fa-trash-alt"></span> Hapus</button>
-                            
+
                             </td>
                         </tr>
                     <?php } ?>
@@ -116,5 +133,38 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hapus Data Kematian?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="app.php?page=lap_kematian" class="form" method="post">
+                        <input type="hidden" name="id" id="id" value="" readonly>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin akan menghapus data kematian?</p>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                            <button type="submit" name="delete" class="btn btn-danger">Hapus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     <?php } ?>
 </section>
+
+<script>
+    $('button.delete').on('click', function(e) {
+        e.preventDefault();
+        var id = $(this).closest('tr').data('id');
+        $('#modal-delete').data('id', id).modal('show');
+        $('#modal-delete #id').val(id);
+        // console.log(id)
+    });
+</script>

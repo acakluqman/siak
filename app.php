@@ -219,8 +219,15 @@ $_SESSION['last_activity'] = $time;
             return false;
         });
         $(function() {
-            $('.table').DataTable();
+            $('.table').DataTable({
+                "language": {
+                    "lengthMenu": "_MENU_",
+                    "search": "",
+                }
+            });
+
             $('.select2').select2();
+            
             $('.datepicker').datepicker({
                 format: 'dd-mm-yyyy',
                 weekStart: 0,

@@ -4,12 +4,48 @@ $pengguna = $conn->prepare("SELECT * FROM pengguna");
 $pengguna->execute();
 
 // hitung jumlah warga
-$warga = $conn->prepare("SELECT * FROM warga");
+$warga = $conn->prepare("SELECT * FROM warga w WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)");
 $warga->execute();
 
 // hitung jumlah riwayat pengajuan surat
 $pengajuan = $conn->prepare("SELECT * FROM rwt_pengajuan");
 $pengajuan->execute();
+
+// hitung jumlah warga laki-laki
+$hitungL = $conn->prepare("SELECT COUNT(*) AS jml FROM warga WHERE jk = :jk");
+$hitungL->execute(['jk' => 'L']);
+$jumlahL = $hitungL->fetch();
+
+// hitung jumlah warga perempuan
+$hitungP = $conn->prepare("SELECT COUNT(*) AS jml FROM warga WHERE jk = :jk");
+$hitungP->execute(['jk' => 'P']);
+$jumlahP = $hitungP->fetch();
+
+// grafik kematian
+$kematian = array();
+for ($i = 12; $i >= 0; $i -= 1) {
+    $tahun_bulan = date("Y-m", strtotime("-$i Months"));
+    // hitung jumlah kematian berdasarkan bulan dan tahun
+    $hitungJml = $conn->prepare("SELECT COUNT(*) AS jumlah FROM rwt_kematian WHERE DATE_FORMAT(tgl_meninggal, '%Y-%m') = :bulan_tahun");
+    $hitungJml->execute(['bulan_tahun' => $tahun_bulan]);
+    $jumlah = $hitungJml->fetch();
+
+    $kematian['bulan'][] = date_format(date_create($tahun_bulan), 'M Y');
+    $kematian['jumlah'][] = $jumlah['jumlah'];
+}
+
+// grafik kelahiran
+$kelahiran = array();
+for ($i = 12; $i >= 0; $i -= 1) {
+    $tahun_bulan = date("Y-m", strtotime("-$i Months"));
+    // hitung jumlah kelahiran berdasarkan bulan dan tahun
+    $hitungJml = $conn->prepare("SELECT COUNT(*) AS jumlah FROM rwt_kelahiran k LEFT JOIN warga w ON w.nik = k.nik WHERE DATE_FORMAT(w.tgl_lahir, '%Y-%m') = :bulan_tahun");
+    $hitungJml->execute(['bulan_tahun' => $tahun_bulan]);
+    $jumlah = $hitungJml->fetch();
+
+    $kelahiran['bulan'][] = date_format(date_create($tahun_bulan), 'M Y');
+    $kelahiran['jumlah'][] = $jumlah['jumlah'];
+}
 ?>
 <section class="content pt-4">
     <div class="container-fluid">
@@ -165,9 +201,9 @@ $pengajuan->execute();
         new Chart(document.getElementById("grafik-kematian"), {
             type: 'line',
             data: {
-                labels: ['Jan 22', 'Feb 22', 'Mar 22', 'Apr 22', 'Mei 22', 'Jun 22', 'Jul 22', 'Agu 22', 'Sep 22', 'Okt 22', 'Nov 22', 'Des 22'],
+                labels: <?= json_encode($kematian['bulan']) ?>,
                 datasets: [{
-                    data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478, 356, 324],
+                    data: <?= json_encode($kematian['jumlah']) ?>,
                     label: "Angka Kematian",
                     borderColor: "#c45850",
                     fill: false
@@ -177,7 +213,15 @@ $pengajuan->execute();
                 title: {
                     display: true,
                     text: 'Jumlah Angka Kematian per Bulan'
-                }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            precision: 0,
+                            beginAtZero: true,
+                        },
+                    }, ],
+                },
             }
         });
 
@@ -185,9 +229,9 @@ $pengajuan->execute();
         new Chart(document.getElementById("grafik-kelahiran"), {
             type: 'line',
             data: {
-                labels: ['Jan 22', 'Feb 22', 'Mar 22', 'Apr 22', 'Mei 22', 'Jun 22', 'Jul 22', 'Agu 22', 'Sep 22', 'Okt 22', 'Nov 22', 'Des 22'],
+                labels: <?= json_encode($kelahiran['bulan']) ?>,
                 datasets: [{
-                    data: [655, 345, 65, 46, 546, 23, 57, 56, 65, 54, 454, 65],
+                    data: <?= json_encode($kelahiran['jumlah']) ?>,
                     label: "Angka Kelahiran",
                     borderColor: "#8e5ea2",
                     fill: false
@@ -197,7 +241,15 @@ $pengajuan->execute();
                 title: {
                     display: true,
                     text: 'Jumlah Angka Kelahiran per Bulan'
-                }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            precision: 0,
+                            beginAtZero: true,
+                        },
+                    }, ],
+                },
             }
         });
 
@@ -207,9 +259,9 @@ $pengajuan->execute();
             data: {
                 labels: ["Laki-Laki", "Perempuan"],
                 datasets: [{
-                    label: "Penduduk",
+                    label: "Warga",
                     backgroundColor: ["#3e95cd", "#8e5ea2"],
-                    data: [2478, 5267]
+                    data: [<?= $jumlahL['jml'] ?>, <?= $jumlahP['jml'] ?>]
                 }]
             },
             options: {
@@ -247,11 +299,11 @@ $pengajuan->execute();
         new Chart(document.getElementById("grafik-umur"), {
             type: 'doughnut',
             data: {
-                labels: ["Balita", "Remaja"],
+                labels: ["Balita", "Anak-Anak", "Remaja", "Dewasa", "Pra Lansia", "Lansia"],
                 datasets: [{
                     label: "Penduduk",
-                    backgroundColor: ["#e8c3b9", "#c45850"],
-                    data: [2478, 5267]
+                    backgroundColor: ["#e8c3b9", "#c45850", "#3e95cd", "#8e5ea2", "#3cba9f", "#c476g4"],
+                    data: [2478, 5267, 3475, 6456, 564, 435]
                 }]
             },
             options: {

@@ -4,7 +4,11 @@ $pengguna = $conn->prepare("SELECT * FROM pengguna");
 $pengguna->execute();
 
 // hitung jumlah warga
-$warga = $conn->prepare("SELECT * FROM warga w WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)");
+$warga = $conn->prepare("SELECT * FROM (
+    SELECT *
+    FROM warga w
+    WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
+    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik)");
 $warga->execute();
 
 // hitung jumlah riwayat pengajuan surat
@@ -12,12 +16,26 @@ $pengajuan = $conn->prepare("SELECT * FROM rwt_pengajuan");
 $pengajuan->execute();
 
 // hitung jumlah warga laki-laki
-$hitungL = $conn->prepare("SELECT COUNT(*) AS jml FROM warga WHERE jk = :jk");
+$hitungL = $conn->prepare("SELECT COUNT(*) AS jml FROM (
+    SELECT *
+    FROM warga w
+    WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
+    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik)
+    AND w1.jk = :jk");
 $hitungL->execute(['jk' => 'L']);
 $jumlahL = $hitungL->fetch();
 
 // hitung jumlah warga perempuan
-$hitungP = $conn->prepare("SELECT COUNT(*) AS jml FROM warga WHERE jk = :jk");
+$hitungP = $conn->prepare("SELECT COUNT(*) AS jml FROM (
+    SELECT *
+    FROM warga w
+    WHERE NOT EXISTS (
+        SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)
+        ) AS w1
+    WHERE NOT EXISTS (
+        SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik
+        )
+    AND w1.jk = :jk");
 $hitungP->execute(['jk' => 'P']);
 $jumlahP = $hitungP->fetch();
 
@@ -46,6 +64,39 @@ for ($i = 12; $i >= 0; $i -= 1) {
     $kelahiran['bulan'][] = date_format(date_create($tahun_bulan), 'M Y');
     $kelahiran['jumlah'][] = $jumlah['jumlah'];
 }
+
+// grafik umur
+$grafikUmur = $conn->prepare("SELECT COUNT(IF(umur < 5, 1, null)) AS 'balita', COUNT(IF(umur BETWEEN 5 AND 11, 1, null)) AS 'anak', COUNT(IF(umur BETWEEN 12 AND 25, 1, null)) AS 'remaja', COUNT(IF(umur BETWEEN 26 AND 45, 1, null)) AS 'dewasa', COUNT(IF(umur BETWEEN 45 AND 55, 1, null)) AS 'pralansia', COUNT(IF(umur > 55, 1, null)) AS 'lansia' FROM (
+    SELECT w1.nama, w1.tgl_lahir, timestampdiff(year, tgl_lahir, CURDATE()) AS umur FROM (
+        SELECT *
+        FROM warga w
+        WHERE NOT EXISTS (
+            SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)
+            ) AS w1
+            WHERE NOT EXISTS (
+                SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik
+                )) AS grafik_umur");
+$grafikUmur->execute();
+
+$umur = array();
+foreach ($grafikUmur->fetchObject() as $key => $row) {
+    $umur['usia'][] = ucfirst($key);
+    $umur['jumlah'][] = $row;
+}
+
+// grafik pengajuan
+$surat = array();
+for ($i = 12; $i >= 0; $i -= 1) {
+    $tahun_bulan = date("Y-m", strtotime("-$i Months"));
+    // hitung jumlah pengajuan surat berdasarkan bulan dan tahun
+    $hitungJml = $conn->prepare("SELECT COUNT(*) AS jumlah FROM rwt_pengajuan WHERE DATE_FORMAT(tgl_ajuan, '%Y-%m') = :bulan_tahun");
+    $hitungJml->execute(['bulan_tahun' => $tahun_bulan]);
+    $jumlah = $hitungJml->fetch();
+
+    $surat['bulan'][] = date_format(date_create($tahun_bulan), 'M Y');
+    $surat['jumlah'][] = $jumlah['jumlah'];
+}
+
 ?>
 <section class="content pt-4">
     <div class="container-fluid">
@@ -299,11 +350,11 @@ for ($i = 12; $i >= 0; $i -= 1) {
         new Chart(document.getElementById("grafik-umur"), {
             type: 'doughnut',
             data: {
-                labels: ["Balita", "Anak-Anak", "Remaja", "Dewasa", "Pra Lansia", "Lansia"],
+                labels: <?= json_encode($umur['usia']) ?>,
                 datasets: [{
-                    label: "Penduduk",
+                    label: "Warga",
                     backgroundColor: ["#e8c3b9", "#c45850", "#3e95cd", "#8e5ea2", "#3cba9f", "#c476g4"],
-                    data: [2478, 5267, 3475, 6456, 564, 435]
+                    data: <?= json_encode($umur['jumlah']) ?>
                 }]
             },
             options: {
@@ -318,9 +369,9 @@ for ($i = 12; $i >= 0; $i -= 1) {
         new Chart(document.getElementById("grafik-surat"), {
             type: 'line',
             data: {
-                labels: ['Jan 22', 'Feb 22', 'Mar 22', 'Apr 22', 'Mei 22', 'Jun 22', 'Jul 22', 'Agu 22', 'Sep 22', 'Okt 22', 'Nov 22', 'Des 22'],
+                labels: <?= json_encode($surat['bulan']) ?>,
                 datasets: [{
-                    data: [655, 345, 65, 46, 546, 23, 57, 56, 65, 54, 454, 65],
+                    data: <?= json_encode($surat['jumlah']) ?>,
                     label: "Jumlah Permintaan",
                     borderColor: "#3cba9f",
                     fill: false
@@ -330,7 +381,15 @@ for ($i = 12; $i >= 0; $i -= 1) {
                 title: {
                     display: true,
                     text: 'Jumlah Angka Permintaan Surat Keterangan'
-                }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            precision: 0,
+                            beginAtZero: true,
+                        },
+                    }],
+                },
             }
         });
     </script>

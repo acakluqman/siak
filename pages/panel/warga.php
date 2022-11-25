@@ -35,7 +35,7 @@ $warga = $conn->prepare("SELECT * FROM (SELECT w.nik, w.kartu_keluarga, w.nama, 
     FROM warga w
     LEFT JOIN ref_pekerjaan p ON p.id_pekerjaan = w.id_pekerjaan
     WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
-    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik)
+    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')
     $filter
     ORDER BY w1.nama ASC");
 $warga->execute();
@@ -88,7 +88,7 @@ if (isset($_POST['delete'])) {
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="usia" class="control-label">Kelompok Usia</label>
-                                <select name="usia" id="usia" class="form-control select2">
+                                <select name="usia" id="usia" class="form-control">
                                     <option value="">Semua Kelompok Usia</option>
                                     <option value="balita" <?= (isset($_POST['usia']) && $_POST['usia'] == 'balita') ? 'selected' : '' ?>>Balita (0-5 Tahun)</option>
                                     <option value="anak" <?= (isset($_POST['usia']) && $_POST['usia'] == 'anak') ? 'selected' : '' ?>>Anak-Anak (5-11 Tahun)</option>
@@ -100,7 +100,7 @@ if (isset($_POST['delete'])) {
                             </div>
                             <div class="col-md-3">
                                 <label for="kawin" class="control-label">Status Kawin</label>
-                                <select name="kawin" id="kawin" class="form-control select2">
+                                <select name="kawin" id="kawin" class="form-control">
                                     <option value="">Semua Status Kawin</option>
                                     <?php foreach ($statusKawin->fetchAll() as $row) { ?>
                                         <option value="<?= $row['id_status_kawin'] ?>" <?= (isset($_POST['kawin']) && $_POST['kawin'] == $row['id_status_kawin']) ? 'selected' : '' ?>><?= $row['nama'] ?></option>
@@ -109,7 +109,7 @@ if (isset($_POST['delete'])) {
                             </div>
                             <div class="col-md-3">
                                 <label for="hubungan" class="control-label">Status Hubungan</label>
-                                <select name="hubungan" id="hubungan" class="form-control select2">
+                                <select name="hubungan" id="hubungan" class="form-control">
                                     <option value="">Semua Status Hubungan</option>
                                     <?php foreach ($statusHubungan->fetchAll() as $row) { ?>
                                         <option value="<?= $row['id_status_hubungan'] ?>" <?= (isset($_POST['hubungan']) && $_POST['hubungan'] == $row['id_status_hubungan']) ? 'selected' : '' ?>><?= $row['nama'] ?></option>
@@ -204,6 +204,10 @@ if (isset($_POST['delete'])) {
 </section>
 
 <script>
+    $(function() {
+        $('#usia, #kawin, #hubungan').select2();
+    })
+
     $('button.delete').on('click', function(e) {
         e.preventDefault();
         var nik = $(this).closest('tr').data('id');

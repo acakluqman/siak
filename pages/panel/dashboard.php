@@ -8,7 +8,7 @@ $warga = $conn->prepare("SELECT * FROM (
     SELECT *
     FROM warga w
     WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
-    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik)");
+    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')");
 $warga->execute();
 
 // hitung jumlah riwayat pengajuan surat
@@ -20,7 +20,7 @@ $hitungL = $conn->prepare("SELECT COUNT(*) AS jml FROM (
     SELECT *
     FROM warga w
     WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
-    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik)
+    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')
     AND w1.jk = :jk");
 $hitungL->execute(['jk' => 'L']);
 $jumlahL = $hitungL->fetch();

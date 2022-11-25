@@ -99,7 +99,7 @@ if (isset($_POST['update'])) {
                 <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Level Pengguna</label>
                     <div class="col-sm-6">
-                        <select class="form-control select2" name="level" id="level">
+                        <select class="form-control" name="level" id="level">
                             <option value="1" <?= $data['id_level'] == '1' ? 'selected' : '' ?>>Administrator</option>
                             <option value="2" <?= $data['id_level'] == '2' ? 'selected' : '' ?>>Ketua RT</option>
                             <option value="3" <?= $data['id_level'] == '3' ? 'selected' : '' ?>>Ketua RW</option>
@@ -139,6 +139,10 @@ if (isset($_POST['update'])) {
 </section>
 
 <script>
+    $(function() {
+        $('#level').select2();
+    })
+
     function changePassword() {
         var ubah_password = document.getElementById("ubah_password");
         var password = document.getElementById("password");

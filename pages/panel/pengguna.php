@@ -67,7 +67,7 @@ if (isset($_POST['delete'])) {
     $id = $_POST['id'];
     $delete = $conn->prepare("DELETE FROM pengguna WHERE md5(id_pengguna) = :id");
     $delete->execute(['id' => $id]);
-    
+
     if ($delete) $alert->success('Berhasil menghapus data pengguna!');
     else $alert->error('Gagal menghapus data pengguna. Silahkan ulangi kembali!');
 }
@@ -148,7 +148,7 @@ if (isset($_POST['delete'])) {
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="nik">Pilih Pengguna</label>
-                            <select class="form-control select2" name="nik" id="nik">
+                            <select class="form-control" name="nik" id="nik">
                                 <?php foreach ($warga as $row) : ?>
                                     <option value="<?= $row['nik'] ?>"><?= $row['nik'] . ' - ' . $row['nama'] ?></option>
                                 <?php endforeach ?>
@@ -172,7 +172,7 @@ if (isset($_POST['delete'])) {
                         </div>
                         <div class="form-group">
                             <label for="level">Hak Akses</label>
-                            <select class="form-control select2" name="level" id="level">
+                            <select class="form-control" name="level" id="level">
                                 <option value="1">Administrator</option>
                                 <option value="2">Ketua RT</option>
                                 <option value="3">Ketua RW</option>
@@ -214,6 +214,16 @@ if (isset($_POST['delete'])) {
 </section>
 
 <script>
+    $(function() {
+        $('#nik').select2({
+            dropdownParent: $('#modal-tambah')
+        });
+
+        $('#level').select2({
+            minimumResultsForSearch: -1
+        });
+    })
+
     $('button.delete').on('click', function(e) {
         e.preventDefault();
         var id = $(this).closest('tr').data('id');

@@ -149,7 +149,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Golongan Darah</label>
                     <div class="col-sm-9">
-                        <select class="form-control select2" name="gol_darah" id="gol_darah">
+                        <select class="form-control" name="gol_darah" id="gol_darah">
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="AB">AB</option>
@@ -161,7 +161,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Agama</label>
                     <div class="col-sm-9">
-                        <select class="form-control select2" name="id_agama" id="id_agama">
+                        <select class="form-control" name="id_agama" id="id_agama">
                             <?php foreach ($agama->fetchAll() as $agama) : ?>
                                 <option value="<?= $agama['id_agama'] ?>"><?= $agama['nama'] ?></option>
                             <?php endforeach ?>
@@ -172,7 +172,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Pendidikan Terakhir</label>
                     <div class="col-sm-9">
-                        <select class="form-control select2" name="id_pendidikan" id="id_pendidikan">
+                        <select class="form-control" name="id_pendidikan" id="id_pendidikan">
                             <?php foreach ($pendidikan->fetchAll() as $pendidikan) : ?>
                                 <option value="<?= $pendidikan['id_pendidikan'] ?>"><?= $pendidikan['nama'] ?></option>
                             <?php endforeach ?>
@@ -183,7 +183,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Pekerjaan</label>
                     <div class="col-sm-9">
-                        <select class="form-control select2" name="id_pekerjaan" id="id_pekerjaan">
+                        <select class="form-control" name="id_pekerjaan" id="id_pekerjaan">
                             <?php foreach ($pekerjaan->fetchAll() as $pekerjaan) : ?>
                                 <option value="<?= $pekerjaan['id_pekerjaan'] ?>"><?= $pekerjaan['nama'] ?></option>
                             <?php endforeach ?>
@@ -194,7 +194,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Status Perkawinan</label>
                     <div class="col-sm-9">
-                        <select class="form-control select2" name="id_status_kawin" id="id_status_kawin">
+                        <select class="form-control" name="id_status_kawin" id="id_status_kawin">
                             <?php foreach ($status_kawin->fetchAll() as $status_kawin) : ?>
                                 <option value="<?= $status_kawin['id_status_kawin'] ?>"><?= $status_kawin['nama'] ?></option>
                             <?php endforeach ?>
@@ -205,7 +205,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Status Hubungan</label>
                     <div class="col-sm-9">
-                        <select class="form-control select2" name="id_status_hubungan" id="id_status_hubungan">
+                        <select class="form-control" name="id_status_hubungan" id="id_status_hubungan">
                             <?php foreach ($status_hubungan->fetchAll() as $status_hubungan) : ?>
                                 <option value="<?= $status_hubungan['id_status_hubungan'] ?>"><?= $status_hubungan['nama'] ?></option>
                             <?php endforeach ?>
@@ -219,3 +219,13 @@ if (isset($_POST['kartu_keluarga'])) {
         </div>
     </div>
 </section>
+
+<script>
+    $(function() {
+        $('#gol_darah, #id_agama, #id_status_kawin').select2({
+            minimumResultsForSearch: -1
+        });
+        
+        $('#id_pendidikan, #id_pekerjaan, #id_status_hubungan').select2();
+    })
+</script>

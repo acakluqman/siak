@@ -39,6 +39,7 @@ $_SESSION['last_activity'] = $time;
     <link rel="stylesheet" href="<?= $base_url . 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' ?>">
     <link rel="shortcut icon" href="<?= $base_url . 'dist/img/pemkot.png' ?>" type="image/x-icon">
     <script src="<?= $base_url . 'plugins/jquery/jquery.min.js' ?>"></script>
+    <script src="<?= $base_url . 'plugins/select2/js/select2.min.js' ?>"></script>
     <?php if (!isset($_GET['page']) || $_GET['page'] == 'dashboard') { ?>
         <link rel="stylesheet" href="<?= $base_url . 'plugins/chart.js/Chart.min.css' ?>">
         <script src="<?= $base_url . 'plugins/chart.js/Chart.min.js' ?>"></script>
@@ -136,36 +137,6 @@ $_SESSION['last_activity'] = $time;
                                 <p>KELUAR</p>
                             </a>
                         </li>
-
-                        <!-- <li class="nav-item menu-open">
-              <a href="#" class="nav-link active">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Dashboard
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.html" class="nav-link active">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v1</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index2.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v2</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index3.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v3</p>
-                  </a>
-                </li>
-              </ul>
-            </li> -->
                     </ul>
                 </nav>
             </div>
@@ -185,24 +156,13 @@ $_SESSION['last_activity'] = $time;
             }
             ?>
         </div>
-
-        <footer class="main-footer">
-            <strong>&copy; 2022 <a href="#">AdminLTE.io</a>.</strong> All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <strong>Version</strong> 1.0
-            </div>
-        </footer>
     </div>
 
     <script src="<?= $base_url . 'plugins/jquery-ui/jquery-ui.min.js' ?>"></script>
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
     <script src="<?= $base_url . 'plugins/bootstrap/js/bootstrap.bundle.min.js' ?>"></script>
     <?php if (!isset($_GET['page']) || $_GET['page'] == 'dashboard') : ?>
         <script src="<?= $base_url . 'plugins/chart.js/Chart.min.js' ?>"></script>
     <?php endif ?>
-    <script src="<?= $base_url . 'plugins/select2/js/select2.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/datatables/jquery.dataTables.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/datatables-responsive/js/dataTables.responsive.min.js' ?>"></script>
@@ -212,7 +172,6 @@ $_SESSION['last_activity'] = $time;
     <script src="<?= $base_url . 'plugins/moment/moment.min.js' ?>"></script>
     <script src="<?= $base_url . 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' ?>"></script>
     <script src="<?= $base_url . 'dist/js/adminlte.js' ?>"></script>
-    <script src="<?= $base_url . 'dist/js/demo.js' ?>"></script>
     <script>
         $('#logout').click(function() {
             location.href = 'login.php?event=90';
@@ -226,8 +185,6 @@ $_SESSION['last_activity'] = $time;
                 }
             });
 
-            $('.select2').select2();
-            
             $('.datepicker').datepicker({
                 format: 'dd-mm-yyyy',
                 weekStart: 0,

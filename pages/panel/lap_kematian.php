@@ -10,14 +10,13 @@ $query = $conn->prepare('SELECT rk.id_rwt_kematian, w.nik, w.nama, rk.tgl_mening
 $query->execute();
 $data = $query->fetchAll();
 
-// ambil data warga kecuali data warga yang sudah ada di table rwt_kematian
-$stmt = $conn->prepare("SELECT w.nik, w.nama
+// ambil data warga kecuali data warga yang sudah ada di table rwt_kematian dan mutasi keluar
+$warga = $conn->prepare("SELECT nik, nama FROM (
+    SELECT *
     FROM warga w
-    WHERE NOT EXISTS (
-        SELECT rk.nik FROM rwt_kematian rk WHERE rk.nik = w.nik
-        ) ORDER BY w.nama ASC");
-$stmt->execute();
-$warga = $stmt->fetchAll();
+    WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
+    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')");
+$warga->execute();
 
 // proses simpan data kematian
 if (isset($_POST['submit'])) {
@@ -113,9 +112,9 @@ if (isset($_POST['delete'])) {
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="nik">Pilih Warga</label>
-                                <select class="form-control select2" name="nik" id="nik" required>
-                                    <?php foreach ($warga as $row) : ?>
-                                        <option value="<?= $row['nik'] ?>"><?= $row['nik'] . ' - ' . $row['nama'] ?></option>
+                                <select class="form-control" name="nik" id="nik" required>
+                                    <?php foreach ($warga->fetchAll() as $w) : ?>
+                                        <option value="<?= $w['nik'] ?>"><?= $w['nik'] . ' - ' . $w['nama'] ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -160,11 +159,17 @@ if (isset($_POST['delete'])) {
 </section>
 
 <script>
-    $('button.delete').on('click', function(e) {
-        e.preventDefault();
-        var id = $(this).closest('tr').data('id');
-        $('#modal-delete').data('id', id).modal('show');
-        $('#modal-delete #id').val(id);
-        // console.log(id)
-    });
+    $(function() {
+        $('#nik').select2({
+            dropdownParent: $('#modal-tambah'),
+        });
+
+        $('button.delete').on('click', function(e) {
+            e.preventDefault();
+            var id = $(this).closest('tr').data('id');
+            $('#modal-delete').data('id', id).modal('show');
+            $('#modal-delete #id').val(id);
+            // console.log(id)
+        });
+    })
 </script>

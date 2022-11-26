@@ -117,13 +117,37 @@ for ($i = 12; $i >= 0; $i -= 1) {
 
             <?php if ($_SESSION['level'] == 4) : ?>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-success">
+                    <div class="small-box bg-primary">
                         <div class="inner">
                             <h3><?= $warga->rowCount() ?></h3>
                             <p>Total Warga</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-person-stalker"></i>
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>xx</h3>
+                            <p>Total Laporan Kematian</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user-times" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>xx</h3>
+                            <p>Total Laporan Kelahiran</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -145,7 +169,7 @@ for ($i = 12; $i >= 0; $i -= 1) {
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>53</h3>
+                            <h3><?= $warga->rowCount() ?></h3>
                             <p>Total Warga</p>
                         </div>
                         <div class="icon">
@@ -157,7 +181,7 @@ for ($i = 12; $i >= 0; $i -= 1) {
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
+                            <h3><?= $pengajuan->rowCount() ?></h3>
                             <p>Total Pengajuan</p>
                         </div>
                         <div class="icon">

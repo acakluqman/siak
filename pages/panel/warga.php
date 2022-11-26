@@ -149,7 +149,7 @@ if (isset($_POST['delete'])) {
                                 <tr data-id="<?= md5($row['nik']) ?>">
                                     <td class="text-center"><?= ($key + 1) ?>.</td>
                                     <td>
-                                        <?php if ($_SESSION['level'] == 4) : ?>
+                                        <?php if (in_array($_SESSION['level'], [2, 3, 4])) : ?>
                                             <a href="<?= $base_url . 'app.php?page=detail_warga&id=' . $row['nik'] ?>"><?= $row['nik'] ?></a>
                                         <?php else : ?>
                                             <?= $row['nik'] ?>

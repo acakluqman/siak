@@ -6,8 +6,8 @@ if (isset($_POST['username'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM pengguna p LEFT JOIN warga w ON w.nik = p.nik WHERE p.username = :username LIMIT 1");
-    $stmt->execute(['username' => $username]);
+    $stmt = $conn->prepare("SELECT * FROM pengguna p LEFT JOIN warga w ON w.nik = p.nik WHERE p.username = :username OR email = :email LIMIT 1");
+    $stmt->execute(['username' => $username, 'email' => $username]);
 
     // cek apakah ada user dengan username tersebut
     if ($stmt->rowCount()) {
@@ -73,7 +73,7 @@ if (isset($_GET['event']) && $_GET['event'] == 90) {
 
                 <form action="login.php" method="post" autocomplete="off">
                     <div class="input-group mb-3">
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Alamat Email atau Username" autofocus autocomplete="username">
+                        <input type="text" name="username" id="username" class="form-control" value="<?= $_POST['username'] ?? '' ?>" placeholder="Alamat Email atau Username" autofocus autocomplete="username">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>

@@ -79,7 +79,7 @@ $warga->execute();
                                 <div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            <input class="form-check-input" type="radio" name="jenis_mutasi" id="mutasim" value="masuk"> Mutasi Masuk
+                                            <input class="form-check-input" type="radio" name="jenis_mutasi" id="mutasim" value="masuk" checked> Mutasi Masuk
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">

@@ -68,7 +68,7 @@ $_SESSION['last_activity'] = $time;
                 <nav class="mt-2" aria-label="nav-sidebar">
                     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                         <div class="image">
-                            <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                            <img src="dist/img/default-profile.png" class="img-circle" alt="User Image">
                         </div>
                         <div class="info">
                             <a href="#" class="d-block"><?= $_SESSION['nama'] ?></a>

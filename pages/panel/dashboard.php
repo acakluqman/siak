@@ -97,6 +97,16 @@ for ($i = 12; $i >= 0; $i -= 1) {
     $surat['jumlah'][] = $jumlah['jumlah'];
 }
 
+// jumlah pengajuan menunggu validasi
+if (in_array($_SESSION['level'], [2, 3])) {
+    if ($_SESSION['level'] == 2) {
+        $jmlMenunggu = $conn->prepare("SELECT * FROM rwt_pengajuan WHERE validasi_rt IS NULL");
+        $jmlMenunggu->execute();
+    } else {
+        $jmlMenunggu = $conn->prepare("SELECT * FROM rwt_pengajuan WHERE validasi_rt = :validasi_rt AND validasi_rw iS NULL");
+        $jmlMenunggu->execute(['validasi_rt' => 1]);
+    }
+}
 ?>
 <section class="content pt-4">
     <div class="container-fluid">
@@ -193,8 +203,8 @@ for ($i = 12; $i >= 0; $i -= 1) {
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>65</h3>
-                            <p>Menunggu Validasi</p>
+                            <h3><?= $jmlMenunggu->rowCount() ?></h3>
+                            <p>Menunggu Validasi Anda</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-compose"></i>

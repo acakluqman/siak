@@ -6,7 +6,6 @@ aksesOnly(4);
 $agama = $conn->prepare("SELECT * FROM ref_agama");
 $agama->execute();
 
-
 // proses tambah warga
 if (isset($_POST['kartu_keluarga'])) {
     $kartu_keluarga = secureInput($_POST['kartu_keluarga']);

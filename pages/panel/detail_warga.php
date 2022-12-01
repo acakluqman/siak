@@ -110,11 +110,6 @@ $keluarga = $sqlKeluarga->fetchAll();
                     <label class="control-label">Status Hubungan</label>
                     <p><?= $warga['status_hubungan'] ?></p>
                 </div>
-                <div class="col-md-6">
-                    <!-- TODO status hidup / mati -->
-                    <label class="control-label">Status</label>
-                    <p>-</p>
-                </div>
             </div>
         </div>
     </div>

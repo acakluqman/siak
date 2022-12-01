@@ -90,8 +90,8 @@ $_SESSION['last_activity'] = $time;
                                 </a>
                             </li>
 
-                            <li class="nav-item <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi', 'tambah_lap_kelahiran']) ? 'menu-open' : '' ?>">
-                                <a href="#" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi', 'tambah_lap_kelahiran']) ? 'active' : '' ?>">
+                            <li class="nav-item <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi', 'tambah_lap_kelahiran', 'tambah_lap_mutasi']) ? 'menu-open' : '' ?>">
+                                <a href="#" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi', 'tambah_lap_kelahiran', 'tambah_lap_mutasi']) ? 'active' : '' ?>">
                                     <i class="nav-icon fas fa-chart-line"></i>
                                     <p>
                                         LAPORAN
@@ -112,7 +112,7 @@ $_SESSION['last_activity'] = $time;
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="app.php?page=lap_mutasi" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'lap_mutasi' ? 'active' : '' ?>">
+                                        <a href="app.php?page=lap_mutasi" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_mutasi', 'tambah_lap_mutasi']) ? 'active' : '' ?>">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Mutasi</p>
                                         </a>

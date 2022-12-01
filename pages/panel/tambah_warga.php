@@ -30,7 +30,7 @@ if (isset($_POST['kartu_keluarga'])) {
     $jk = secureInput($_POST['jk']);
     $tmp_lahir = secureInput($_POST['tmp_lahir']);
     $tgl_lahir = secureInput($_POST['tgl_lahir']);
-    $gol_darah = secureInput($_POST['gol_darah']);
+    $gol_darah = $_POST['gol_darah'] ?: null;
     $id_agama = secureInput($_POST['id_agama']);
     $id_pendidikan = secureInput($_POST['id_pendidikan']);
     $id_pekerjaan = secureInput($_POST['id_pekerjaan']);
@@ -139,7 +139,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 <div class="form-group row">
                     <label for="jk" class="col-sm-3 col-form-label">Tempat, Tanggal Lahir</label>
                     <div class="col-sm-3 mb-2">
-                        <input type="text" class="form-control" name="tmp_lahir" id="tgl_lahir" placeholder="Tempat Lahir" required>
+                        <input type="text" class="form-control" name="tmp_lahir" id="tmp_lahir" placeholder="Tempat Lahir" required>
                     </div>
                     <div class="col-sm-6">
                         <input type="text" class="form-control datepicker" name="tgl_lahir" id="tgl_lahir" placeholder="Tanggal Lahir" required>
@@ -150,6 +150,7 @@ if (isset($_POST['kartu_keluarga'])) {
                     <label for="jk" class="col-sm-3 col-form-label">Golongan Darah</label>
                     <div class="col-sm-9">
                         <select class="form-control" name="gol_darah" id="gol_darah">
+                            <option value="">Tidak Tahu</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="AB">AB</option>
@@ -225,7 +226,7 @@ if (isset($_POST['kartu_keluarga'])) {
         $('#gol_darah, #id_agama, #id_status_kawin').select2({
             minimumResultsForSearch: -1
         });
-        
+
         $('#id_pendidikan, #id_pekerjaan, #id_status_hubungan').select2();
     })
 </script>

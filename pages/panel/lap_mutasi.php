@@ -2,14 +2,18 @@
 // validasi hak akses
 aksesOnly([2, 3, 4]);
 
-// ambil data warga kecuali data warga yang sudah ada di table rwt_kematian dan mutasi keluar
-$warga = $conn->prepare("SELECT * FROM (SELECT w.nik, w.kartu_keluarga, w.nama, w.jk, w.tmp_lahir, w.tgl_lahir, timestampdiff(year, w.tgl_lahir, curdate()) as umur, w.id_status_kawin, w.id_status_hubungan, p.nama AS pekerjaan
-    FROM warga w
-    LEFT JOIN ref_pekerjaan p ON p.id_pekerjaan = w.id_pekerjaan
-    WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
-    WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')
-    ORDER BY w1.nama ASC");
-$warga->execute();
+$mutasi = $conn->prepare("SELECT * FROM rwt_mutasi LEFT JOIN warga ON warga.nik = rwt_mutasi.nik ORDER BY rwt_mutasi.tgl_lapor DESC");
+$mutasi->execute();
+
+// proses hapus data
+if (isset($_POST['delete'])) {
+    $nik = $_POST['nik'];
+    $delete = $conn->prepare("DELETE FROM rwt_mutasi WHERE md5(nik) = :nik");
+    $delete->execute(['nik' => $nik]);
+
+    if ($delete) $alert->success('Berhasil menghapus data!', 'app.php?page=lap_mutasi', true);
+    else $alert->error('Gagal menghapus data. Silahkan ulangi kembali!', 'app.php?page=lap_mutasi', true);
+}
 ?>
 <section class="content-header">
     <div class="container-fluid">
@@ -46,17 +50,31 @@ $warga->execute();
                         <th>Jenis Mutasi</th>
                         <th>Tanggal Mutasi</th>
                         <th>Tanggal Laporan</th>
+                        <?php if ($_SESSION['level'] == 4) : ?>
+                            <th class="wd-5"></th>
+                        <?php endif ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    <?php
+                    $no = 1;
+                    foreach ($mutasi->fetchAll() as $row) : ?>
+                        <tr data-id="<?= md5($row['nik']) ?>">
+                            <td class="text-center"><?= $no++ ?>.</td>
+                            <td><?= $row['nik'] ?></td>
+                            <td><?= $row['nama'] ?></td>
+                            <td><span class="badge badge-<?= $row['jenis_mutasi'] == 'keluar' ? 'danger' : 'success' ?>">Mutasi <?= ucwords($row['jenis_mutasi']) ?></span></td>
+                            <td><?= date_format(date_create($row['tgl_mutasi']), 'd m Y') ?></td>
+                            <td><?= date_format(date_create($row['tgl_lapor']), 'd M Y H:i A') ?></td>
+                            <?php if ($_SESSION['level'] == 4) : ?>
+                                <td class="text-center">
+                                    <button title="Hapus" class="btn btn-sm btn-danger delete">
+                                        <span class="fa fa-trash-alt"></span> Hapus
+                                    </button>
+                                </td>
+                            <?php endif ?>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -129,7 +147,7 @@ $warga->execute();
                         </button>
                     </div>
                     <form action="app.php?page=lap_mutasi" class="form" method="post">
-                        <input type="hidden" name="id" id="id" value="" readonly>
+                        <input type="hidden" name="nik" id="nik" value="" readonly>
                         <div class="modal-body">
                             <p>Apakah Anda yakin akan menghapus data mutasi?</p>
                         </div>
@@ -145,9 +163,17 @@ $warga->execute();
 </section>
 
 <script>
-    $(function(){
+    $(function() {
         $('#nik').select2({
             dropdownParent: $('#modal-tambah'),
         });
     })
+
+    $('button.delete').on('click', function(e) {
+        e.preventDefault();
+        var nik = $(this).closest('tr').data('id');
+        $('#modal-delete').data('nik', nik).modal('show');
+        $('#modal-delete #nik').val(nik);
+        console.log(nik)
+    });
 </script>

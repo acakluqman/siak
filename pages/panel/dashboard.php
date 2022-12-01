@@ -11,6 +11,14 @@ $warga = $conn->prepare("SELECT * FROM (
     WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')");
 $warga->execute();
 
+// hitung jumlah kematian
+$jmlKematian = $conn->prepare("SELECT * FROM rwt_kematian");
+$jmlKematian->execute();
+
+// hitung jumlah kelahiran
+$jmlKelahiran = $conn->prepare("SELECT * FROM rwt_kelahiran");
+$jmlKelahiran->execute();
+
 // hitung jumlah riwayat pengajuan surat
 $pengajuan = $conn->prepare("SELECT * FROM rwt_pengajuan");
 $pengajuan->execute();
@@ -141,7 +149,7 @@ if (in_array($_SESSION['level'], [2, 3])) {
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>xx</h3>
+                            <h3><?= $jmlKematian->rowCount() ?></h3>
                             <p>Total Laporan Kematian</p>
                         </div>
                         <div class="icon">
@@ -153,7 +161,7 @@ if (in_array($_SESSION['level'], [2, 3])) {
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>xx</h3>
+                            <h3><?= $jmlKelahiran->rowCount() ?></h3>
                             <p>Total Laporan Kelahiran</p>
                         </div>
                         <div class="icon">

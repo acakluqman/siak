@@ -54,8 +54,8 @@ if (isset($_POST['delete'])) {
     $delete = $conn->prepare("DELETE FROM warga WHERE md5(nik) = :nik");
     $delete->execute(['nik' => $nik]);
 
-    if ($delete) $alert->success('Berhasil menghapus data pengguna!');
-    else $alert->error('Gagal menghapus data pengguna. Silahkan ulangi kembali!');
+    if ($delete) $alert->success('Berhasil menghapus data pengguna!', 'app.php?page=warga', true);
+    else $alert->error('Gagal menghapus data pengguna. Silahkan ulangi kembali!', 'app.php?page=warga', true);
 }
 ?>
 <section class="content-header">

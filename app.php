@@ -1,5 +1,4 @@
 <?php
-ob_start();
 require_once('./config.php');
 require_once('./function/akses.php');
 require_once('./function/input.php');
@@ -91,8 +90,8 @@ $_SESSION['last_activity'] = $time;
                                 </a>
                             </li>
 
-                            <li class="nav-item <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi']) ? 'menu-open' : '' ?>">
-                                <a href="#" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi']) ? 'active' : '' ?>">
+                            <li class="nav-item <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi', 'tambah_lap_kelahiran']) ? 'menu-open' : '' ?>">
+                                <a href="#" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kematian', 'lap_kelahiran', 'lap_mutasi', 'tambah_lap_kelahiran']) ? 'active' : '' ?>">
                                     <i class="nav-icon fas fa-chart-line"></i>
                                     <p>
                                         LAPORAN
@@ -107,7 +106,7 @@ $_SESSION['last_activity'] = $time;
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="app.php?page=lap_kelahiran" class="nav-link <?= isset($_GET['page']) && $_GET['page'] == 'lap_kelahiran' ? 'active' : '' ?>">
+                                        <a href="app.php?page=lap_kelahiran" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['lap_kelahiran', 'tambah_lap_kelahiran'])  ? 'active' : '' ?>">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Kelahiran</p>
                                         </a>

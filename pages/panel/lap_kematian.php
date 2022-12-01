@@ -73,7 +73,9 @@ if (isset($_POST['delete'])) {
                         <th>Nama Warga</th>
                         <th>Tanggal Meninggal</th>
                         <th>Tanggal Laporan</th>
-                        <th class="w-5"></th>
+                        <?php if ($_SESSION['level'] == 4) : ?>
+                            <th class="w-5"></th>
+                        <?php endif ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,10 +89,11 @@ if (isset($_POST['delete'])) {
                             <td><?= $row['nama'] ?></td>
                             <td><?= date_format(date_create($row['tgl_meninggal']), 'd M Y') ?></td>
                             <td><?= date_format(date_create($row['tgl_lapor']), 'd M Y H:i A') ?></td>
-                            <td class="text-center">
-                                <button type="button" title="Hapus" class="btn btn-sm btn-danger delete"><span class="fa fa-trash-alt"></span> Hapus</button>
-
-                            </td>
+                            <?php if ($_SESSION['level'] == 4) : ?>
+                                <td class="text-center">
+                                    <button type="button" title="Hapus" class="btn btn-sm btn-danger delete"><span class="fa fa-trash-alt"></span> Hapus</button>
+                                </td>
+                            <?php endif ?>
                         </tr>
                     <?php } ?>
                 </tbody>

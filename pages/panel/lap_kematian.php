@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
     $insert->execute(['nik' => $nik, 'tgl_meninggal' => $tgl_meninggal]);
 
     if ($insert) $alert->success('Berhasil menambahkan data kematian!', 'app.php?page=lap_kematian', true);
-    else $alert->error('Gagal menambahkan data kematian. Silahkan ulangi kembali!', 'app.php?page=lap_', true);
+    else $alert->error('Gagal menambahkan data kematian. Silahkan ulangi kembali!', 'app.php?page=lap_kematian', true);
 }
 
 // proses hapus data kematian

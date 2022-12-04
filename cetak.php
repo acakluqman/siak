@@ -50,7 +50,7 @@ $html .= '</head>';
 $html .= '<body>';
 // header
 $html .= '<p>';
-$html .= '<strong>RT:</strong> 02 <strong>RW:</strong> 02';
+$html .= '<strong>RT:</strong> 02 <strong>RW:</strong> 03';
 $html .= '<br/>';
 $html .= '<strong>KELURAHAN:</strong> KETINTANG';
 $html .= '</p>';

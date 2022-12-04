@@ -18,6 +18,10 @@ $warga = $conn->prepare("SELECT nik, nama FROM (
     WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')");
 $warga->execute();
 
+// tahun laporan kematian
+$tahun = $conn->prepare("SELECT DISTINCT(YEAR(k.tgl_meninggal)) AS tahun FROM rwt_kematian k LEFT JOIN warga w ON w.nik = k.nik ORDER BY tahun DESC");
+$tahun->execute();
+
 // proses simpan data kematian
 if (isset($_POST['submit'])) {
     $nik = $_POST['nik'];
@@ -62,6 +66,7 @@ if (isset($_POST['delete'])) {
         <?php if ($_SESSION['level'] == 4) { ?>
             <div class="card-header">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-tambah"><i class="fa fa-plus"></i> Tambah Data Kematian</button>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#modal-laporan"><i class="fa fa-file-pdf" aria-hidden="true"></i> Cetak Laporan</button>
             </div>
         <?php } ?>
         <div class="card-body table-responsive">
@@ -158,6 +163,36 @@ if (isset($_POST['delete'])) {
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modal-laporan">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cetak Laporan Kematian</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="cetak-laporan.php" target="_blank" method="post">
+                    <input type="hidden" name="action" value="lap_mati" readonly>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="tahun" class="control-label">Tahun</label>
+                            <select class="form-control" name="tahun" id="tahun">
+                                <?php foreach ($tahun->fetchAll() as $row) : ?>
+                                    <option value="<?= $row['tahun'] ?>">Tahun <?= $row['tahun'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" name="cetak" class="btn btn-primary">Cetak Laporan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <?php } ?>
 </section>
 
@@ -165,6 +200,10 @@ if (isset($_POST['delete'])) {
     $(function() {
         $('#nik').select2({
             dropdownParent: $('#modal-tambah'),
+        });
+        
+        $('#tahun').select2({
+            dropdownParent: $('#modal-laporan')
         });
 
         $('button.delete').on('click', function(e) {

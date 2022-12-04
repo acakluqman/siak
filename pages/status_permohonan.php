@@ -1,4 +1,15 @@
 <?php
+
+// ambil nama pak RT
+$rt = $conn->prepare("SELECT * FROM pengguna p LEFT JOIN warga w ON w.nik = p.nik WHERE p.id_level = 2 LIMIT 1");
+$rt->execute();
+$namart = $rt->fetch();
+
+// ambil nama pak RW
+$rw = $conn->prepare("SELECT * FROM pengguna p LEFT JOIN warga w ON w.nik = p.nik WHERE p.id_level = 3 LIMIT 1");
+$rw->execute();
+$namarw = $rw->fetch();
+
 if (isset($_REQUEST['submit']) or isset($_REQUEST['nik'])) {
     $nik = secureInput($_REQUEST['nik']);
     $tahun = secureInput(substr($_REQUEST['kode_permohonan'], 0, 2));
@@ -36,6 +47,15 @@ if (isset($_REQUEST['submit']) or isset($_REQUEST['nik'])) {
 
                         <?php if (!empty($data)) : ?>
                             <div class="pt-4" id="result">
+                                <?php if ($data['no_surat'] != '') : ?>
+                                    <div class="form-group row mb-0 mb-0">
+                                        <label class="control-label col-md-3">Nomor Surat</label>
+                                        <div class="col-md-9">
+                                            <p><?= $data['no_surat'] ?: '-' ?></p>
+                                        </div>
+                                    </div>
+                                <?php endif ?>
+
                                 <div class="form-group row mb-0 mb-0">
                                     <label class="control-label col-md-3">NIK Pemohon</label>
                                     <div class="col-md-9">
@@ -85,7 +105,7 @@ if (isset($_REQUEST['submit']) or isset($_REQUEST['nik'])) {
                                             <tr>
                                                 <?php
                                                 if ($data['validasi_rt'] && $data['tgl_validasi_rt']) {
-                                                    echo '<td><i class="fa fa-check-circle text-success"></i></td><td style="width: 95%;">Disetujui Ketua RT</td>';
+                                                    echo '<td><i class="fa fa-check-circle text-success"></i></td><td style="width: 95%;">Disetujui Ketua RT (' . $namart['nama'] . ')</td>';
                                                 } elseif (!$data['validasi_rt'] && $data['tgl_validasi_rt']) {
                                                     echo '<td><i class="fa fa-exclamation-circle text-danger"></i></td><td style="width: 95%;">Ditolak Ketua RT<br><span class="text-muted"><em>' . $data['catatan_val_rt'] . '</em></span></td>';
                                                 } elseif (is_null($data['validasi_rt']) && is_null($data['tgl_validasi_rt'])) {
@@ -97,7 +117,7 @@ if (isset($_REQUEST['submit']) or isset($_REQUEST['nik'])) {
                                                 <?php
                                                 if ($data['validasi_rt'] && $data['tgl_validasi_rt']) {
                                                     if ($data['validasi_rw'] && $data['tgl_validasi_rw']) {
-                                                        echo '<td><i class="fa fa-check-circle text-success"></i></td><td style="width: 95%;">Disetujui Ketua RW</td>';
+                                                        echo '<td><i class="fa fa-check-circle text-success"></i></td><td style="width: 95%;">Disetujui Ketua RW (' . $namarw['nama'] . ')</td>';
                                                     } elseif (!$data['validasi_rw'] && $data['tgl_validasi_rw']) {
                                                         echo '<td><i class="fa fa-exclamation-circle text-danger"></i></td><td style="width: 95%;">Ditolak Ketua RW<br><span class="text-muted"><em>' . $data['catatan_val_rw'] . '</em></span></td>';
                                                     } elseif (is_null($data['validasi_rw']) && is_null($data['tgl_validasi_rw'])) {

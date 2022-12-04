@@ -116,11 +116,6 @@ if (in_array($_SESSION['level'], [2, 3])) {
         $jmlMenunggu->execute(['validasi_rt' => 1]);
     }
 }
-
-
-echo "<pre>";
-print_r (generateNoSurat());
-echo "</pre>";
 ?>
 <section class="content pt-4">
     <div class="container-fluid">

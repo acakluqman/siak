@@ -33,7 +33,8 @@ $namarw = $rw->fetch();
 $mpdf = new \Mpdf\Mpdf(['format' => 'A5-P', 'margin_left' => 10, 'margin_right' => 10, 'margin_top' => 10, 'margin_bottom' => 10, 'margin_header' => 10, 'margin_footer' => 10]);
 
 // qr code
-$qr = new QrCode(md5($surat->id_pengajuan));
+$arr = array('page' => 'status_permohonan', 'nik' => $surat->nik, 'kode_permohonan' => date_format(date_create($surat->tgl_ajuan), 'ym') . sprintf("%03s", (int) $surat->id_pengajuan));
+$qr = new QrCode($base_url . 'index.php?' . http_build_query($arr));
 $output = new Output\Png();
 $data = $output->output($qr, 100, [255, 255, 255], [0, 0, 0]);
 file_put_contents('./tmp/' . md5($surat->id_pengajuan) . '.png', $data);
@@ -82,7 +83,7 @@ $html .= '<td>: ' . $jk . '</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<td>Tempat, Tanggal Lahir</td>';
-$html .= '<td>: ' . $surat->tmp_lahir . ', ' . date_format(date_create($surat->tgl_lahir), 'd M Y') . '</td>';
+$html .= '<td>: ' . $surat->tmp_lahir . ', ' . tglIndo(date_format(date_create($surat->tgl_lahir), 'Y-m-d')) . '</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<td>Agama</td>';

@@ -1,9 +1,9 @@
 <?php
-if (isset($_POST['submit'])) {
-    $nik = secureInput($_POST['nik']);
-    $tahun = secureInput(substr($_POST['kode_permohonan'], 0, 2));
-    $bulan = secureInput(substr($_POST['kode_permohonan'], 2, 2));
-    $id = secureInput(substr($_POST['kode_permohonan'], 4));
+if (isset($_REQUEST['submit']) or isset($_REQUEST['nik'])) {
+    $nik = secureInput($_REQUEST['nik']);
+    $tahun = secureInput(substr($_REQUEST['kode_permohonan'], 0, 2));
+    $bulan = secureInput(substr($_REQUEST['kode_permohonan'], 2, 2));
+    $id = secureInput(substr($_REQUEST['kode_permohonan'], 4));
 
     $query = $conn->prepare("SELECT rp.*, w.nama FROM rwt_pengajuan rp LEFT JOIN warga w ON w.nik = rp.nik WHERE rp.nik = :nik AND rp.id_pengajuan = :id_pengajuan AND LEFT(rp.tgl_ajuan, 7) = :tgl_ajuan LIMIT 1");
     $query->execute(['nik' => $nik, 'id_pengajuan' => (int) $id, 'tgl_ajuan' => '20' . $tahun . '-' . $bulan]);
@@ -25,16 +25,16 @@ if (isset($_POST['submit'])) {
                         <form action="" class="form" method="post">
                             <div class="form-group">
                                 <label for="NIK">NIK</label>
-                                <input type="text" class="form-control" name="nik" id="nik" value="<?= isset($_POST['nik']) ? $_POST['nik'] : '' ?>" placeholder="Masukkan NIK Pemohon" required>
+                                <input type="text" class="form-control" name="nik" id="nik" value="<?= isset($_REQUEST['nik']) ? $_REQUEST['nik'] : '' ?>" placeholder="Masukkan NIK Pemohon" required>
                             </div>
                             <div class="form-group">
                                 <label for="kode_permohonan">Kode Permohonan</label>
-                                <input type="text" class="form-control" name="kode_permohonan" id="kode_permohonan" value="<?= isset($_POST['kode_permohonan']) ? $_POST['kode_permohonan'] : '' ?>" placeholder="Masukkan Kode Permohonan" required>
+                                <input type="text" class="form-control" name="kode_permohonan" id="kode_permohonan" value="<?= isset($_REQUEST['kode_permohonan']) ? $_REQUEST['kode_permohonan'] : '' ?>" placeholder="Masukkan Kode Permohonan" required>
                             </div>
                             <button type="submit" name="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Cek Status</button>
                         </form>
 
-                        <?php if (isset($_POST['kode_permohonan'])) : ?>
+                        <?php if (!empty($data)) : ?>
                             <div class="pt-4" id="result">
                                 <div class="form-group row mb-0 mb-0">
                                     <label class="control-label col-md-3">NIK Pemohon</label>
@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
                                 <div class="form-group row mb-0">
                                     <label class="control-label col-md-3">Tanggal Permohonan</label>
                                     <div class="col-md-9">
-                                        <p><?= date_format(date_create($data['tgl_ajuan']), 'd M Y H:i A') ?></p>
+                                        <p><?= tglIndo(date_format(date_create($data['tgl_ajuan']), 'Y-m-d')) . ' ' . date_format(date_create($data['tgl_ajuan']), 'H:i A') ?></p>
                                     </div>
                                 </div>
 
@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
                                     </div>
                                 </div>
 
-                                <?php if ($data['validasi_rt'] && $data['tgl_validasi_rt'] && $data['validasi_rw'] && $data['tgl_validasi_rw']) { ?>
+                                <?php if (isset($_POST['submit']) && $data['validasi_rt'] && $data['tgl_validasi_rt'] && $data['validasi_rw'] && $data['tgl_validasi_rw']) { ?>
                                     <div class="form-group row mb-0">
                                         <label class="control-label col-md-3">&nbsp;</label>
                                         <div class="col-md-9">

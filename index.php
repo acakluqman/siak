@@ -1,6 +1,7 @@
 <?php
 require_once('./config.php');
 require_once('./function/input.php');
+require_once('./function/general.php');
 ?>
 <!DOCTYPE html>
 <html lang="id">

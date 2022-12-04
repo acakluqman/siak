@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 
 // uncomment
@@ -11,7 +12,7 @@ require_once('./vendor/autoload.php');
 $alert = new \Plasticbrain\FlashMessages\FlashMessages();
 
 $base_url = 'http://localhost:8000/'; // sertakan '/' dibelakang
-$db_host  = '127.0.0.1';              // host db
+$db_host  = 'localhost';              // host db
 $db_user  = 'root';                   // username db
 $db_pass  = 'hackyhack';              // password db
 $db_name  = 'sipendu';                // nama db

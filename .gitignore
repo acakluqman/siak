@@ -1,2 +1,5 @@
 config.php
+tmp/*
+!tmp/index.html
 vendor/*
+composer.lock

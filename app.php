@@ -2,6 +2,7 @@
 require_once('./config.php');
 require_once('./function/akses.php');
 require_once('./function/input.php');
+require_once('./function/general.php');
 
 // cek apakah sudah login
 if (!$_SESSION['is_login']) {

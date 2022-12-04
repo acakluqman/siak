@@ -114,7 +114,7 @@ if (isset($_POST['submit'])) {
                                     <div class="form-group row mb-0">
                                         <label class="control-label col-md-3">&nbsp;</label>
                                         <div class="col-md-9">
-                                            <a href="<?= $base_url . 'cetak.php' ?>" target="_blank" class="btn btn-danger mt-4"><i class="fa fa-file-pdf mr-3" aria-hidden="true"></i>Unduh Surat</a>
+                                            <a href="<?= $base_url . 'cetak.php?id=' . md5($data['id_pengajuan']) . '&code=' . md5($data['nik']) ?>" target="_blank" class="btn btn-danger mt-4"><i class="fa fa-file-pdf mr-3" aria-hidden="true"></i>Unduh Surat</a>
                                         </div>
                                     </div>
                                 <?php } ?>

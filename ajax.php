@@ -5,7 +5,11 @@ require_once('./function/input.php');
 switch ($_POST['action']) {
     case 'cek_nik':
         $nik = secureInput($_POST['nik']);
-        $stmt = $conn->prepare("SELECT w.nik, w.nama FROM warga w WHERE NOT EXISTS (SELECT rk.nik FROM rwt_kematian rk WHERE rk.nik = w.nik) AND w.nik = :nik LIMIT 1");
+        $stmt = $conn->prepare("SELECT * FROM (SELECT w.nik, w.nama 
+            FROM warga w
+            WHERE NOT EXISTS (SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)) AS w1
+            WHERE NOT EXISTS (SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar')
+            AND nik = :nik LIMIT 1");
         $stmt->execute(['nik' => $nik]);
 
         echo json_encode(['status' => $stmt->rowCount() ? 200 : 201, 'data' => $stmt->fetch()]);

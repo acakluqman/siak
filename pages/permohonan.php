@@ -89,6 +89,8 @@
                                             Anda dapat mengecek permohonan melalui menu <strong>Cek Permohonan</strong>
                                         </p>
 
+                                        <p>Silahkan <em>screenshot</em> atau salin <strong>Kode Permohonan</strong> dibawah ini!</p>
+
                                         <h5><strong>Kode Permohonan</strong><br />#<span id="kode_pengajuan"></span></h5>
                                     </div>
                                 </div>

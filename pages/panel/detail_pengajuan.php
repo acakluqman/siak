@@ -21,11 +21,12 @@ if (isset($_POST['submit'])) {
     if ($_SESSION['level'] == 2) {
         // simpan validasi RT
         $insert = $conn->prepare("UPDATE rwt_pengajuan SET validasi_rt = :validasi, tgl_validasi_rt = :tgl_validasi, catatan_val_rt = :catatan WHERE md5(id_pengajuan) = :id");
+        $insert->execute(['id' => $id, 'validasi' => $validasi, 'catatan' => $catatan, 'tgl_validasi' => $tgl_validasi]);
     } else {
         // simpan validasi RW
-        $insert = $conn->prepare("UPDATE rwt_pengajuan SET validasi_rw = :validasi, tgl_validasi_rw = :tgl_validasi, catatan_val_rw = :catatan WHERE md5(id_pengajuan) = :id");
+        $insert = $conn->prepare("UPDATE rwt_pengajuan SET no_surat = :no_surat, validasi_rw = :validasi, tgl_validasi_rw = :tgl_validasi, catatan_val_rw = :catatan WHERE md5(id_pengajuan) = :id");
+        $insert->execute(['no_surat' => generateNoSurat(), 'id' => $id, 'validasi' => $validasi, 'catatan' => $catatan, 'tgl_validasi' => $tgl_validasi]);
     }
-    $insert->execute(['id' => $id, 'validasi' => $validasi, 'catatan' => $catatan, 'tgl_validasi' => $tgl_validasi]);
 
     if ($insert) $alert->success('Data validasi pengajuan surat keterangan berhasil disimpan!', 'app.php?page=pengajuan', true);
     else $alert->error('Data validasi pengajuan surat keterangan gagal disimpan. Silahkan ulangi kembali!', 'app.php?page=pengajuan', true);

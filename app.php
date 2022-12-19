@@ -83,7 +83,7 @@ $_SESSION['last_activity'] = $time;
                         </li>
 
                         <!-- login sebagai operator, ketua rt dan ketua rw -->
-                        <?php if (in_array($_SESSION['level'], [2, 3, 4])) : ?>
+                        <?php if (in_array($_SESSION['level'], [1, 2, 3, 4])) : ?>
                             <li class="nav-item">
                                 <a href="app.php?page=warga" class="nav-link <?= isset($_GET['page']) && in_array($_GET['page'], ['warga', 'edit_warga', 'detail_warga', 'tambah_warga']) ? 'active' : '' ?>">
                                     <span class="nav-icon fas fa-users"></span>

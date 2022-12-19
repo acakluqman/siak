@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly([2, 3, 4]);
+aksesOnly([1, 2, 3, 4]);
 
 // data pengajuan
 $permohonan = $conn->prepare("SELECT p.*, w.nama FROM rwt_pengajuan p LEFT JOIN warga w ON w.nik = p.nik ORDER BY p.tgl_ajuan DESC");

@@ -7,6 +7,16 @@ $stmt = $conn->prepare("SELECT nik, nama FROM warga w WHERE NOT EXISTS (SELECT n
 $stmt->execute();
 $warga = $stmt->fetchAll();
 
+// count rt
+$rt = $conn->prepare("SELECT * FROM pengguna WHERE id_level = :id_level");
+$rt->execute(['id_level' => 2]);
+$countrt = $rt->rowCount();
+
+// count rw
+$rw = $conn->prepare("SELECT * FROM pengguna WHERE id_level = :id_level");
+$rw->execute(['id_level' => 3]);
+$countrw = $rw->rowCount();
+
 // proses tambah pengguna
 if (isset($_POST['username'])) {
     $nik = secureInput($_POST['nik']);
@@ -174,8 +184,8 @@ if (isset($_POST['delete'])) {
                             <label for="level">Hak Akses</label>
                             <select class="form-control" name="level" id="level">
                                 <option value="1">Administrator</option>
-                                <option value="2">Ketua RT</option>
-                                <option value="3">Ketua RW</option>
+                                <option value="2" <?= $countrt ? 'disabled' : '' ?>>Ketua RT</option>
+                                <option value="3" <?= $countrw ? 'disabled' : '' ?>>Ketua RW</option>
                                 <option value="4">Operator</option>
                             </select>
                         </div>

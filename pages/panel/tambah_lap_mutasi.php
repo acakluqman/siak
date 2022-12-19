@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly(4);
+aksesOnly([1, 4]);
 
 // data agama
 $agama = $conn->prepare("SELECT * FROM ref_agama");

@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly([2, 3, 4]);
+aksesOnly([1, 2, 3, 4]);
 
 // data warga
 $filter = "";
@@ -78,7 +78,7 @@ if (isset($_POST['delete'])) {
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <?php if ($_SESSION['level'] == 4) : ?>
+                <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                     <div class="card-header">
                         <a href="app.php?page=tambah_warga" class="btn btn-primary"><span class="fa fa-user-plus"></span> Tambah Warga</a>
                     </div>
@@ -139,7 +139,7 @@ if (isset($_POST['delete'])) {
                                 <th>LP</th>
                                 <th>Tempat, Tanggal Lahir</th>
                                 <th>Pekerjaan</th>
-                                <?php if ($_SESSION['level'] == 4) : ?>
+                                <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                                     <th></th>
                                 <?php endif ?>
                             </tr>
@@ -149,7 +149,7 @@ if (isset($_POST['delete'])) {
                                 <tr data-id="<?= md5($row['nik']) ?>">
                                     <td class="text-center"><?= ($key + 1) ?>.</td>
                                     <td>
-                                        <?php if (in_array($_SESSION['level'], [2, 3, 4])) : ?>
+                                        <?php if (in_array($_SESSION['level'], [1, 2, 3, 4])) : ?>
                                             <a href="<?= $base_url . 'app.php?page=detail_warga&id=' . $row['nik'] ?>"><?= $row['nik'] ?></a>
                                         <?php else : ?>
                                             <?= $row['nik'] ?>
@@ -160,7 +160,7 @@ if (isset($_POST['delete'])) {
                                     <td><?= $row['jk'] ?></td>
                                     <td><?= $row['tmp_lahir'] . ', ' . date_format(date_create($row['tgl_lahir']), 'd M Y') ?></td>
                                     <td><?= $row['pekerjaan'] ?></td>
-                                    <?php if ($_SESSION['level'] == 4) : ?>
+                                    <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                                         <td class="text-center">
                                             <a href="app.php?page=edit_warga&id=<?= $row['nik'] ?>" class="btn btn-sm btn-success">
                                                 <span class="fas fa-user-edit"></span> Edit

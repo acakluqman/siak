@@ -1,5 +1,4 @@
 <?php
-// TODO grafik mutasi
 // hitung jumlah pengguna
 $pengguna = $conn->prepare("SELECT * FROM pengguna");
 $pengguna->execute();
@@ -116,6 +115,25 @@ if (in_array($_SESSION['level'], [2, 3])) {
         $jmlMenunggu->execute(['validasi_rt' => 1]);
     }
 }
+
+// grafik mutasi
+$mutasi = array();
+$gmutasi = $conn->prepare("SELECT DISTINCT(YEAR(tgl_mutasi)) as tahun FROM rwt_mutasi");
+$gmutasi->execute();
+
+foreach ($gmutasi->fetchAll() as $mut) {
+    $jmlMutasiMasukSql = $conn->prepare("SELECT COUNT(*) AS jmlmasuk FROM rwt_mutasi WHERE jenis_mutasi = :jenis AND YEAR(tgl_mutasi) = :tahun");
+    $jmlMutasiMasukSql->execute(['jenis' => 'masuk', 'tahun' => $mut['tahun']]);
+    $jmlMutasiMasuk = $jmlMutasiMasukSql->fetch();
+
+    $jmlMutasiKeluarSql = $conn->prepare("SELECT COUNT(*) AS jmlkeluar FROM rwt_mutasi WHERE jenis_mutasi = :jenis AND YEAR(tgl_mutasi) = :tahun");
+    $jmlMutasiKeluarSql->execute(['jenis' => 'keluar', 'tahun' => $mut['tahun']]);
+    $jmlMutasiKeluar = $jmlMutasiKeluarSql->fetch();
+
+    $mutasi['tahun'][] = $mut['tahun'];
+    $mutasi['masuk'][] = $jmlMutasiMasuk['jmlmasuk'];
+    $mutasi['keluar'][] = $jmlMutasiKeluar['jmlkeluar'];
+}
 ?>
 <section class="content pt-4">
     <div class="container-fluid">
@@ -134,7 +152,7 @@ if (in_array($_SESSION['level'], [2, 3])) {
                 </div>
             <?php endif ?>
 
-            <?php if ($_SESSION['level'] == 4) : ?>
+            <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-primary">
                         <div class="inner">
@@ -224,7 +242,7 @@ if (in_array($_SESSION['level'], [2, 3])) {
         </div>
     </div>
 </section>
-<?php if (in_array($_SESSION['level'], [2, 3, 4])) { ?>
+<?php if (in_array($_SESSION['level'], [1, 2, 3, 4])) { ?>
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -362,7 +380,15 @@ if (in_array($_SESSION['level'], [2, 3])) {
                 title: {
                     display: true,
                     text: 'Jumlah Perbandingan Penduduk Berdasarkan Jenis Kelamin'
-                }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            precision: 0,
+                            beginAtZero: true,
+                        },
+                    }, ],
+                },
             }
         });
 
@@ -370,15 +396,15 @@ if (in_array($_SESSION['level'], [2, 3])) {
         new Chart(document.getElementById("grafik-mutasi"), {
             type: 'bar',
             data: {
-                labels: ["2019", "2020", "2021", "2022"],
+                labels: <?= json_encode($mutasi['tahun']) ?>,
                 datasets: [{
                     label: "Mutasi Keluar",
                     backgroundColor: "#c45850",
-                    data: [133, 221, 783, 2478]
+                    data: <?= json_encode($mutasi['keluar']) ?>
                 }, {
                     label: "Mutasi Masuk",
                     backgroundColor: "#3e95cd",
-                    data: [408, 547, 675, 734]
+                    data: <?= json_encode($mutasi['masuk']) ?>
                 }]
             },
             options: {

@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly([2, 3, 4]);
+aksesOnly([1, 2, 3, 4]);
 
 $sqlDetail = $conn->prepare("SELECT p.*, w.nama
     FROM rwt_pengajuan p
@@ -93,6 +93,13 @@ if (isset($_POST['submit'])) {
                     <label class="col-sm-2 col-form-label">Keterangan Pengajuan</label>
                     <div class="col-sm-10">
                         <p><?= $detail->keterangan ?></p>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Bukti KTP</label>
+                    <div class="col-sm-10">
+                        <img src="<?= $base_url . $detail->filektp ?>" alt="ktp" height="150px">
                     </div>
                 </div>
 

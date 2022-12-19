@@ -31,10 +31,29 @@ switch ($_POST['action']) {
         $keperluan = secureInput($_POST['keperluan']);
         $keterangan = secureInput($_POST['keterangan']);
 
-        $stmt = $conn->prepare("INSERT INTO rwt_pengajuan (nik, tujuan, keperluan, keterangan) VALUES (:nik, :tujuan, :keperluan, :keterangan)");
-        $stmt->execute(['nik' => $nik, 'tujuan' => $tujuan, 'keperluan' => $keperluan, 'keterangan' => $keterangan]);
+        // upload
+        $temp = "upload/";
+        if (!file_exists($temp)) mkdir($temp);
+        $fileupload = $_FILES['fileupload']['tmp_name'];
+        $ImageName = $_FILES['fileupload']['name'];
+        $ImageType = $_FILES['fileupload']['type'];
 
-        echo json_encode(['status' => $stmt ? 200 : 201, 'message' => $stmt ? date('ym') . sprintf("%03d", $conn->lastInsertId())  : $conn->errorInfo()]);
+        if (!empty($fileupload)) {
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $ImageExt       = str_replace('.', '', $ImageExt); // Extension
+            $ImageName      = preg_replace("/\.[^.\s]{3,4}$/", "", $ImageName);
+            $NewImageName   = str_replace(' ', '', $ImageName . '.' . $ImageExt);
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName); // Menyimpan file
+
+            $stmt = $conn->prepare("INSERT INTO rwt_pengajuan (nik, tujuan, keperluan, keterangan, filektp) VALUES (:nik, :tujuan, :keperluan, :keterangan, :filektp)");
+            $stmt->execute(['nik' => $nik, 'tujuan' => $tujuan, 'keperluan' => $keperluan, 'keterangan' => $keterangan, 'filektp' => $temp . $NewImageName]);
+
+            echo json_encode(['status' => $stmt ? 200 : 201, 'message' => $stmt ? date('ym') . sprintf("%03d", $conn->lastInsertId())  : $conn->errorInfo()]);
+        } else {
+            echo json_encode(['status' => 201, 'message' => 'Gagal mengunggah file. Silahkan hubungi Admin!']);
+        }
+
         break;
 
     default:

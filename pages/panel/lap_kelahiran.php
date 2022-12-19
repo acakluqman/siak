@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly([2, 3, 4]);
+aksesOnly([1, 2, 3, 4]);
 
 $kelahiran = $conn->prepare("SELECT * FROM rwt_kelahiran LEFT JOIN warga ON warga.nik = rwt_kelahiran.nik ORDER BY rwt_kelahiran.tgl_lapor DESC");
 $kelahiran->execute();
@@ -39,7 +39,7 @@ if (isset($_POST['delete'])) {
 <section class="content">
     <?= $alert->display() ?>
     <div class="card">
-        <?php if ($_SESSION['level'] == 4) { ?>
+        <?php if (in_array($_SESSION['level'], [1, 4])) { ?>
             <div class="card-header">
                 <a href="app.php?page=tambah_lap_kelahiran" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data Kelahiran</a>
                 <button class="btn btn-danger" data-toggle="modal" data-target="#modal-laporan"><i class="fa fa-file-pdf" aria-hidden="true"></i> Cetak Laporan</button>
@@ -54,7 +54,7 @@ if (isset($_POST['delete'])) {
                         <th>Nama Warga</th>
                         <th>Tanggal Lahir</th>
                         <th>Tanggal Laporan</th>
-                        <?php if ($_SESSION['level'] == 4) : ?>
+                        <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                             <th></th>
                         <?php endif ?>
                     </tr>
@@ -69,7 +69,7 @@ if (isset($_POST['delete'])) {
                             <td><?= $data['nama'] ?></td>
                             <td><?= date_format(date_create($data['tgl_lahir']), 'd M Y') ?></td>
                             <td><?= date_format(date_create($data['tgl_lapor']), 'd M Y H:i A') ?></td>
-                            <?php if ($_SESSION['level'] == 4) : ?>
+                            <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                                 <td class="text-center">
                                     <button title="Hapus" class="btn btn-sm btn-danger delete">
                                         <span class="fa fa-trash-alt"></span> Hapus

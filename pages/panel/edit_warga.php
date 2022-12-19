@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly(4);
+aksesOnly([1, 4]);
 
 // data agama
 $agama = $conn->prepare("SELECT * FROM ref_agama");
@@ -34,6 +34,7 @@ if (isset($_POST['submit'])) {
     $nik = secureInput($_POST['nik']);
     $nama = secureInput($_POST['nama']);
     $jk = secureInput($_POST['jk']);
+    $alamat = $_POST['alamat'];
     $tmp_lahir = secureInput($_POST['tmp_lahir']);
     $tgl_lahir = secureInput($_POST['tgl_lahir']);
     $gol_darah = secureInput($_POST['gol_darah']);
@@ -52,7 +53,7 @@ if (isset($_POST['submit'])) {
             $alert->warning('Format NIK tidak valid!');
         } else {
             // update data warga ke db
-            $update = $conn->prepare("UPDATE warga SET kartu_keluarga = :kartu_keluarga, nama = :nama, jk = :jk, tmp_lahir = :tmp_lahir, tgl_lahir = :tgl_lahir, gol_darah = :gol_darah, id_agama = :id_agama, id_pendidikan = :id_pendidikan, id_pekerjaan = :id_pekerjaan, id_status_kawin = :id_status_kawin, id_status_hubungan = :id_status_hubungan WHERE nik = :nik");
+            $update = $conn->prepare("UPDATE warga SET kartu_keluarga = :kartu_keluarga, nama = :nama, jk = :jk, tmp_lahir = :tmp_lahir, tgl_lahir = :tgl_lahir, gol_darah = :gol_darah, id_agama = :id_agama, id_pendidikan = :id_pendidikan, id_pekerjaan = :id_pekerjaan, id_status_kawin = :id_status_kawin, id_status_hubungan = :id_status_hubungan, alamat = :alamat WHERE nik = :nik");
             $update->execute([
                 'nik' => $nik,
                 'kartu_keluarga' => $kartu_keluarga,
@@ -65,7 +66,8 @@ if (isset($_POST['submit'])) {
                 'id_pendidikan' => $id_pendidikan,
                 'id_pekerjaan' => $id_pekerjaan,
                 'id_status_kawin' => $id_status_kawin,
-                'id_status_hubungan' => $id_status_hubungan
+                'id_status_hubungan' => $id_status_hubungan,
+                'alamat' => $alamat
             ]);
 
             if ($update) $alert->success('Berhasil memperbarui data warga!', 'app.php?page=edit_warga&id=' . $warga->nik, true);
@@ -139,6 +141,13 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="col-sm-6">
                         <input type="text" class="form-control datepicker" name="tgl_lahir" id="tgl_lahir" value="<?= date_format(date_create($warga->tgl_lahir), 'd-m-Y') ?>" placeholder="Tanggal Lahir" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="alamat" id="alamat" value="<?= $warga->alamat ?>" placeholder="Alamat" required>
                     </div>
                 </div>
 
@@ -226,7 +235,7 @@ if (isset($_POST['submit'])) {
         $('#gol_darah, #id_agama, #id_status_kawin').select2({
             minimumResultsForSearch: -1
         });
-        
+
         $('#id_pendidikan, #id_pekerjaan, #id_status_hubungan').select2();
     })
 </script>

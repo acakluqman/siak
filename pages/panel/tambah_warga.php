@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly(4);
+aksesOnly([1, 4]);
 
 // data agama
 $agama = $conn->prepare("SELECT * FROM ref_agama");
@@ -28,6 +28,7 @@ if (isset($_POST['kartu_keluarga'])) {
     $nik = secureInput($_POST['nik']);
     $nama = secureInput($_POST['nama']);
     $jk = secureInput($_POST['jk']);
+    $alamat = $_POST['alamat'];
     $tmp_lahir = secureInput($_POST['tmp_lahir']);
     $tgl_lahir = secureInput($_POST['tgl_lahir']);
     $gol_darah = $_POST['gol_darah'] ?: null;
@@ -56,7 +57,7 @@ if (isset($_POST['kartu_keluarga'])) {
                 $alert->warning('NIK sudah ada. Periksa kembali NIK yang diinputkan!');
             } else {
                 // simpan data warga ke db
-                $insert = $conn->prepare("INSERT INTO warga (nik, kartu_keluarga, nama, jk, tmp_lahir, tgl_lahir, gol_darah, id_agama, id_pendidikan, id_pekerjaan, id_status_kawin, id_status_hubungan) VALUES (:nik, :kartu_keluarga, :nama, :jk, :tmp_lahir, :tgl_lahir, :gol_darah, :id_agama, :id_pendidikan, :id_pekerjaan, :id_status_kawin, :id_status_hubungan)");
+                $insert = $conn->prepare("INSERT INTO warga (nik, kartu_keluarga, nama, jk, tmp_lahir, tgl_lahir, gol_darah, id_agama, id_pendidikan, id_pekerjaan, id_status_kawin, id_status_hubungan, alamat) VALUES (:nik, :kartu_keluarga, :nama, :jk, :tmp_lahir, :tgl_lahir, :gol_darah, :id_agama, :id_pendidikan, :id_pekerjaan, :id_status_kawin, :id_status_hubungan, :alamat)");
                 $insert->execute([
                     'nik' => $nik,
                     'kartu_keluarga' => $kartu_keluarga,
@@ -64,6 +65,7 @@ if (isset($_POST['kartu_keluarga'])) {
                     'jk' => $jk,
                     'tmp_lahir' => ucwords(strtolower($tmp_lahir)),
                     'tgl_lahir' => date_format(date_create($tgl_lahir), 'Y-m-d'),
+                    'alamat' => $alamat,
                     'gol_darah' => $gol_darah,
                     'id_agama' => $id_agama,
                     'id_pendidikan' => $id_pendidikan,
@@ -143,6 +145,13 @@ if (isset($_POST['kartu_keluarga'])) {
                     </div>
                     <div class="col-sm-6">
                         <input type="text" class="form-control datepicker" name="tgl_lahir" id="tgl_lahir" placeholder="Tanggal Lahir" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="alamat" id="alamat" placeholder="Alamat" required>
                     </div>
                 </div>
 

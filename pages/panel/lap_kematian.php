@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly([2, 3, 4]);
+aksesOnly([1, 2, 3, 4]);
 
 // ambil data riwayat kematian
 $query = $conn->prepare('SELECT rk.id_rwt_kematian, w.nik, w.nama, rk.tgl_meninggal, rk.tgl_lapor
@@ -63,7 +63,7 @@ if (isset($_POST['delete'])) {
 <section class="content">
     <?= $alert->display() ?>
     <div class="card">
-        <?php if ($_SESSION['level'] == 4) { ?>
+        <?php if (in_array($_SESSION['level'], [1, 4])) { ?>
             <div class="card-header">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-tambah"><i class="fa fa-plus"></i> Tambah Data Kematian</button>
                 <button class="btn btn-danger" data-toggle="modal" data-target="#modal-laporan"><i class="fa fa-file-pdf" aria-hidden="true"></i> Cetak Laporan</button>
@@ -78,7 +78,7 @@ if (isset($_POST['delete'])) {
                         <th>Nama Warga</th>
                         <th>Tanggal Meninggal</th>
                         <th>Tanggal Laporan</th>
-                        <?php if ($_SESSION['level'] == 4) : ?>
+                        <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                             <th class="w-5"></th>
                         <?php endif ?>
                     </tr>
@@ -94,7 +94,7 @@ if (isset($_POST['delete'])) {
                             <td><?= $row['nama'] ?></td>
                             <td><?= date_format(date_create($row['tgl_meninggal']), 'd M Y') ?></td>
                             <td><?= date_format(date_create($row['tgl_lapor']), 'd M Y H:i A') ?></td>
-                            <?php if ($_SESSION['level'] == 4) : ?>
+                            <?php if (in_array($_SESSION['level'], [1, 4])) : ?>
                                 <td class="text-center">
                                     <button type="button" title="Hapus" class="btn btn-sm btn-danger delete"><span class="fa fa-trash-alt"></span> Hapus</button>
                                 </td>
@@ -106,7 +106,7 @@ if (isset($_POST['delete'])) {
         </div>
     </div>
 
-    <?php if ($_SESSION['level'] == 4) { ?>
+    <?php if (in_array($_SESSION['level'], [1, 4])) { ?>
         <div class="modal fade" id="modal-tambah" tabindex="-1" role="dialog" aria-labelledby="modalTambah" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -165,34 +165,34 @@ if (isset($_POST['delete'])) {
         </div>
 
         <div class="modal fade" id="modal-laporan">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Cetak Laporan Kematian</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="cetak-laporan.php" target="_blank" method="post">
-                    <input type="hidden" name="action" value="lap_mati" readonly>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="tahun" class="control-label">Tahun</label>
-                            <select class="form-control" name="tahun" id="tahun">
-                                <?php foreach ($tahun->fetchAll() as $row) : ?>
-                                    <option value="<?= $row['tahun'] ?>">Tahun <?= $row['tahun'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cetak Laporan Kematian</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="cetak-laporan.php" target="_blank" method="post">
+                        <input type="hidden" name="action" value="lap_mati" readonly>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="tahun" class="control-label">Tahun</label>
+                                <select class="form-control" name="tahun" id="tahun">
+                                    <?php foreach ($tahun->fetchAll() as $row) : ?>
+                                        <option value="<?= $row['tahun'] ?>">Tahun <?= $row['tahun'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" name="cetak" class="btn btn-primary">Cetak Laporan</button>
-                    </div>
-                </form>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" name="cetak" class="btn btn-primary">Cetak Laporan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
     <?php } ?>
 </section>
 
@@ -201,7 +201,7 @@ if (isset($_POST['delete'])) {
         $('#nik').select2({
             dropdownParent: $('#modal-tambah'),
         });
-        
+
         $('#tahun').select2({
             dropdownParent: $('#modal-laporan')
         });

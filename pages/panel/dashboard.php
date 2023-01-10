@@ -41,7 +41,7 @@ $hitungP = $conn->prepare("SELECT COUNT(*) AS jml FROM (
         SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)
         ) AS w1
     WHERE NOT EXISTS (
-        SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik
+        SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar'
         )
     AND w1.jk = :jk");
 $hitungP->execute(['jk' => 'P']);

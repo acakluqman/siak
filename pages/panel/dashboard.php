@@ -82,7 +82,7 @@ $grafikUmur = $conn->prepare("SELECT COUNT(IF(umur < 5, 1, null)) AS 'balita', C
             SELECT nik FROM rwt_kematian k WHERE k.nik = w.nik)
             ) AS w1
             WHERE NOT EXISTS (
-                SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik
+                SELECT * FROM rwt_mutasi m WHERE m.nik = w1.nik AND m.jenis_mutasi = 'keluar'
                 )) AS grafik_umur");
 $grafikUmur->execute();
 

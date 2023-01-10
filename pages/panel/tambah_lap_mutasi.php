@@ -90,7 +90,7 @@ if (isset($_POST['jenis_mutasi'])) {
 
                         // simpan data mutasi
                         $insert = $conn->prepare("INSERT INTO rwt_mutasi (jenis_mutasi, nik, tgl_mutasi) VALUES(:jenis_mutasi, :nik, :tgl_mutasi)");
-                        $insert->execute(['jenis_mutasi' => $jenis_mutasi, 'nik' => $nikk, 'tgl_mutasi' => $tgl_mutasi]);
+                        $insert->execute(['jenis_mutasi' => $jenis_mutasi, 'nik' => $nikm, 'tgl_mutasi' => $tgl_mutasi]);
 
                         $conn->commit();
 

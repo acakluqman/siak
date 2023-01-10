@@ -1,6 +1,6 @@
 <?php
 // validasi hak akses
-aksesOnly([2, 3, 4]);
+aksesOnly([1, 2, 3, 4]);
 
 // data detail warga
 $sqlWarga = $conn->prepare("SELECT w.*, a.nama AS nama_agama, p.nama AS nama_pendidikan, k.nama AS nama_pekerjaan, sk.nama AS status_kawin, sh.nama AS status_hubungan
@@ -109,6 +109,10 @@ $keluarga = $sqlKeluarga->fetchAll();
                 <div class="col-md-6">
                     <label class="control-label">Status Hubungan</label>
                     <p><?= $warga['status_hubungan'] ?></p>
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">Alamat</label>
+                    <p><?= $warga['alamat'] ?: '-' ?></p>
                 </div>
             </div>
         </div>

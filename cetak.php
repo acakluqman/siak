@@ -31,6 +31,8 @@ $rw->execute();
 $namarw = $rw->fetch();
 
 $mpdf = new \Mpdf\Mpdf(['format' => 'A5-P', 'margin_left' => 10, 'margin_right' => 10, 'margin_top' => 10, 'margin_bottom' => 10, 'margin_header' => 10, 'margin_footer' => 10]);
+$mpdf->SetWatermarkImage('./dist/img/pemkot-bw.jpeg');
+$mpdf->showWatermarkImage = true;
 
 // qr code
 $arr = array('page' => 'status_permohonan', 'nik' => $surat->nik, 'kode_permohonan' => date_format(date_create($surat->tgl_ajuan), 'ym') . sprintf("%03s", (int) $surat->id_pengajuan));
